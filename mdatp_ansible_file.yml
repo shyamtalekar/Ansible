@@ -1,0 +1,99 @@
+---
+#Install and configure the MS_Defender
+
+- name: Setup yum repo
+  yum_repository: 
+    name: "{{ base_mdatp_yum_repo }}"
+    description: "Alight Artifactory Microsoft RPM Packages"
+    baseurl: "{{ base_mdatp_repo_source }}"
+    enabled: "yes"
+    sslverify: "no"
+
+
+- name: Create microsoft directory
+  file: 
+    path: "/opt/microsoft"
+    state: "directory"
+    mode: "755"
+
+
+- name: Create mdatp directory
+  file: 
+    path: "/opt/microsoft/mdatp/"
+    state: "directory"
+    mode: "775"
+
+
+- name: Create managed folder in /etc/
+  file:
+    path: "/etc/opt/microsoft/mdatp/managed"
+    state: directory
+    mode: "755"
+
+
+- name: Get MS Defender script from artifactory
+  get_url:
+    url: "{{ ms_defender_script }}"
+    dest: "/opt/microsoft/mdatp/"
+    validate_certs: "no"
+    mode: "0755"
+
+
+- name: Setting Variables for MS_Defender Installation in Linux 
+  set_fact: 
+    defender_service: "mdatp"
+    defender_script: "/opt/microsoft/mdatp/MicrosoftDefenderATPOnboardingLinuxServer.py"
+
+    
+- name: Install Defender Service 
+  yum: 
+    name: "{{ defender_service }}"
+    state: "latest"
+    #installroot: "/var/tmp"
+    disable_gpg_check: "yes"
+
+
+- name: Template managed mdatp json file
+  template: 
+    src: "mdatp_managed.json.j2"
+    dest: "/etc/opt/microsoft/mdatp/managed/managed_mdatp.json"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+
+
+- name: Check health status of MS Defender
+  command: 
+    cmd: "mdatp health --field licensed"
+  register: mdatp_health
+
+
+- name: Register MS Defender
+  command: 
+    cmd: "python3 {{ defender_script }}"
+    chdir: "/usr/bin"
+  when: mdatp_health.stdout != "true"
+  
+
+- name: MS Defender Update
+  cron: 
+    name: "Updates MS Defender package (weekly)"
+    minute: "*"
+    hour: "6"
+    weekday: "3"
+    user: "root"
+    job: "yum update mdatp > /dev/null 2>&1"
+    cron_file: "ms_defender_update"
+
+
+- name: Ensure MS Defender is always running 
+  service: 
+    name: "{{ defender_service }}"
+    state: "started"
+    enabled: yes
+
+
+
+
+ 
+  
