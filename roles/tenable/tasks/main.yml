@@ -1,0 +1,60 @@
+---
+
+- name: Copy nessus-agent file 
+  copy:
+    src: "{{ nessus_source_url }}/NessusAgent-{{ nessus_agent_version }}-es{{ ansible_distribution_major_version  }}.x86_64.rpm"
+    dest: /tmp/nessus-agent.rpm
+
+- name: Install nessus-agent
+  yum:
+    name: /tmp/nessus-agent.rpm
+    state: present
+  
+- name: Remove nessus-agent rpm from /tmp
+  file:
+    path: /tmp/nessus-agent.rpm
+    state: absent
+
+- block: 
+  - name: Check Nessus Agent
+    command: "{{ nessus_agent_path }} agent status"
+    become: yes
+    changed_when: false
+    ignore_errors: yes
+    register: nessus_agent_service_status
+  when: nessus_license_key is defined or nessus_license_key != ''
+
+- block: 
+  - name: Fix process priority for nessuscli
+    command: > 
+          {{ nessus_agent_path }} fix --set process_priority='low'
+    become: yes
+  
+  - name: Allow update_hostnamt for nessuscli 
+    command: > 
+          {{ nessus_agent_path }} fix --set update_hostname='yes'
+    become: yes
+  
+  - name: Link Nessus Agent to Nessus Manager
+    command: > 
+          {{ nessus_agent_path }} agent link
+          --key={{secret.tenable_cloud_key}}
+          --host={{nessus_agent_host}}
+          --port={{nessus_agent_port}}
+          --groups="{{nessus_agent_group}}"
+    become: yes
+  when: nessus_agent_service_status.stdout is search('Not linked to')
+  
+- name: Make sure a service is running
+  systemd:
+    state: started
+    enabled: true
+    name: "{{ nessus_agent_service_name }}"
+  when: nessus_license_key is defined or nessus_license_key != ''
+
+- name: Make sure a service is stopped and disabled
+  systemd:
+    state: stopped
+    enabled: false
+    name: "{{ nessus_agent_service_name }}"
+  when: nessus_license_key is undefined or nessus_license_key == ''
