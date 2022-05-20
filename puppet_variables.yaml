@@ -1,0 +1,46 @@
+---
+lookup_options:
+  base::sysctl:
+    merge: deep
+
+base::packages: []
+base::root_passwd: ''
+base::facter_config: {}
+base::update_trust_cmd: ''
+base::ca_certs: {}
+base::gpg_keys: {}
+base::yum_repos: {}
+base::sysctl: {}
+base::linux_temp_dir: "/opt/puppetlabs/scratch"
+base::jq::version: "1.6"
+base::cis::scanner_source: "%{lookup('artifactory_url')}/devops-generic-local/puppet/comply/Assessor-CLI-v4.9.0.zip"
+base::tenable::host: "cloud.tenable.com"
+base::tenable::port: 443
+base::tenable::group: "Alight_AWS_Servers_Group1"
+base::tenable::license_key: "eeaa42d2e17376b8b4bfe8495c93c314497f112c515182f00ef42ab158b74b1a"
+base::tenable::version: "8.3.1"
+base::tenable::source_url: "%{lookup('artifactory_url')}/security-generic-local/tenable"
+base::newrelic::fedramp: false
+base::nbu::version: '9.1.0.1'
+base::nbu::source_url: "%{lookup('artifactory_url')}/uploads-generic-local/netbackup-binaries"
+base::nbu::servers:
+  - netbackup-master-pla-1.apissa.us-east-1.aws.alight.com
+base::nbu::media_servers:
+  - netbackup-media-pla-1.apissa.us-east-1.aws.alight.com
+base::nbu::cert_fingerprint: 15:60:B5:39:09:5B:38:5D:31:27:A4:5B:0E:A9:BB:52:12:D4:0C:71
+base::nbu::auth_token: MNBVLZFPKUXJEESL
+base::mdatp::ensure: 'present'
+base::mdatp::service_enabled: true
+base::mdatp::service_ensure: "running"
+base::mdatp::excludedpaths: []
+base::mdatp::excludedfilenames: []
+base::mdatp::excludedfileextensions: []
+base::service_now::sa_group: 'sadiscoverycom'
+base::service_now::sa_user: 'sadiscoverycomlinux'
+base::service_now::sa_uid: 1200
+base::service_now::sa_gid: 1200
+base::service_now::sshkeys: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC4LtX6hfP8zgBZJpbDiRk2axZx1HGMj7JMO/L8H661KyinH13EFM8xWEktmtn7s+EzQub201xN1vyETdxRdvLSs5d7Z3uyG8rn4SqiFgvKcCItiB4Pw5VUb8t1luvaQspHbGqLC3yJDnetSvuEaTqn2Na5Ipe2fMAX1cPeswzUTlXFvifi79PMc4OSHKp+d1zjiK7/8WecdmHwygUp0LlDXhhHqC4wnvkwxUOhiz54mN5xSVAapeJx9lrRctXuT5KImwsINjlSvzVZHyayeqcnJurfyxjBmYBpXzYS5sN3fiSRSdQyl84Wb5RAKorhAZTtN8VV6DDg8IOeW1BmywvMvbvWJJkkyTV9gRdDzRvA5UUB7VPkKekL5lwwZLQ7F16ByneOgDFuOb4CAm8kixgIVs09mkLsndSv1N1ABUkKGaKqOoaUAvAn2GfaQwUS0jyfcKdWjaQquVZLTuvzkuV4hoL3wXRAtvccJmbAVFN59ls8yfauc1yZA8rjK8/L0+c= sadiscoverycomlinux'
+base::cte_agent::cte_source: "%{lookup('artifactory_url')}/ciphertrust-generic-local"
+base::cte_agent::reg_token: CpnKiV5DD7ZK99REoLYlSWPTbdMBjdHYo90qk5uKsuZTNpoHIvTonTyxL8W23uwm
+base::cte_agent::server_hostname: 'ciprtrstmgrpr1-pla.apissa.aws.alight.com'
+base::sysstat::version: 'latest'
