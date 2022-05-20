@@ -1,7 +1,8 @@
 ---
 
 nessus_license_key: "eeaa42d2e17376b8b4bfe8495c93c314497f112c515182f00ef42ab158b74b1a"
-nessus_source_url: ""
+artifactory_url: "https://artifactory.alight.com:443/artifactory"
+nessus_source_url: "{{artifactory_url}}/security-generic-local/tenable"
 nessus_agent_version: "8.3.1"
 
 nessus_agent_host: "cloud.tenable.com"
