@@ -1,11 +1,11 @@
 ---
 
-nessus_license_key: ""
+nessus_license_key: "eeaa42d2e17376b8b4bfe8495c93c314497f112c515182f00ef42ab158b74b1a"
 nessus_source_url: ""
-nessus_agent_version: ""
+nessus_agent_version: "8.3.1"
 
-nessus_agent_host: "abc"
+nessus_agent_host: "cloud.tenable.com"
 nessus_agent_port: '443'
-nessus_agent_group: 'xyz'
+nessus_agent_group: 'Alight_AWS_Servers_Group1'
 nessus_agent_path: '/opt/nessus_agent/sbin/nessuscli'
 nessus_agent_service_name: 'nessusagent'

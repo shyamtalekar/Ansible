@@ -1,30 +1,30 @@
 ---
 
-- name: Copy nessus-agent file 
-  copy:
-    src: "{{ nessus_source_url }}/NessusAgent-{{ nessus_agent_version }}-es{{ ansible_distribution_major_version  }}.x86_64.rpm"
-    dest: /tmp/nessus-agent.rpm
-
-- name: Install nessus-agent
-  yum:
-    name: /tmp/nessus-agent.rpm
-    state: present
+- block: 
+  - name: Copy nessus-agent file 
+    copy:
+      src: "{{ nessus_source_url }}/NessusAgent-{{ nessus_agent_version }}-es{{ ansible_distribution_major_version  }}.x86_64.rpm"
+      dest: /tmp/nessus-agent.rpm
   
-- name: Remove nessus-agent rpm from /tmp
-  file:
-    path: /tmp/nessus-agent.rpm
-    state: absent
+  - name: Install nessus-agent
+    yum:
+      name: /tmp/nessus-agent.rpm
+      state: present
+    
+  - name: Remove nessus-agent rpm from /tmp
+    file:
+      path: /tmp/nessus-agent.rpm
+      state: absent
 
-- block: 
-  - name: Check Nessus Agent
-    command: "{{ nessus_agent_path }} agent status"
-    become: yes
-    changed_when: false
-    ignore_errors: yes
-    register: nessus_agent_service_status
-  when: nessus_license_key is defined or nessus_license_key != ''
+  - block: 
+    - name: Check Nessus Agent
+      command: "{{ nessus_agent_path }} agent status"
+      become: yes
+      changed_when: false
+      ignore_errors: yes
+      register: nessus_agent_service_status
+    when: nessus_license_key is defined or nessus_license_key != ''
 
-- block: 
   - name: Fix process priority for nessuscli
     command: > 
           {{ nessus_agent_path }} fix --set process_priority='low'
@@ -50,11 +50,15 @@
     state: started
     enabled: true
     name: "{{ nessus_agent_service_name }}"
-  when: nessus_license_key is defined or nessus_license_key != ''
+  when: "{{ ami_build | bool }}" == True or nessus_license_key is defined or nessus_license_key != ''
 
-- name: Make sure a service is stopped and disabled
-  systemd:
-    state: stopped
-    enabled: false
-    name: "{{ nessus_agent_service_name }}"
-  when: nessus_license_key is undefined or nessus_license_key == ''
+- block: 
+
+  - msg: "Skipping tenable agent registration to {{ inventory_hostname }}"
+
+  - name: Make sure a service is stopped and disabled
+    systemd:
+      state: stopped
+      enabled: false
+      name: "{{ nessus_agent_service_name }}"
+  when: "{{ ami_build | bool }}" == False or nessus_license_key is undefined or nessus_license_key == ''
