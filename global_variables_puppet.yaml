@@ -1,0 +1,313 @@
+---
+# Merges all key values during Hiera lookup (rather than override).
+lookup_options:
+  cem_linux::config:
+    merge: deep
+  base::mdatp::excludedpaths:
+    merge: deep
+  base::mdatp::excludedfilenames:
+    merge: deep  
+
+# Artifactory base URL - Use "%{lookup('artifactory_url')}" to reference in hiera
+artifactory_url: "https://artifactory.alight.com:443/artifactory"
+
+# A global scratch directory for use for install and misc configuration (Linux only.)
+scratch_dir: "/opt/puppetlabs/scratch"
+
+# Alight CIS Hardening
+cis_linux::exclude:
+  - 'cis_linux::cis::no_history'
+
+# CIS Level 1 Hardening
+cem_linux::benchmark: cis
+cem_linux::allow_on_kubernetes_node: true
+cem_linux::config:
+  profile: server
+  level: '1'
+  firewall_type: unmanaged
+  ignore:
+    # Turned off due to Security Groups preference.
+    - ensure_firewalld_is_installed
+    - ensure_firewalld_service_enabled_and_running
+    # Turned off due to docker environments.
+    - ensure_ip_forwarding_is_disabled    
+  control_configs:
+    # Allows app deployments to manage cron.allow (RHEL8)
+    ensure_cron_daemon_is_enabled:
+      set_cron_allow_perms: false
+    # Allows app deployments to manage cron.allow (RHEL7)
+    ensure_cron_daemon_is_enabled_and_running:
+      set_cron_allow_perms: false      
+    # Mask service instead of removing packages
+    ensure_nfs_utils_is_not_installed_or_the__nfs_server_service_is_masked:
+      keep_nfsutils: true
+    # Mask service instead of removing packages
+    ensure_rpcbind_is_not_installed_or_the__rpcbind_services_are_masked:
+      keep_rpcbind: true
+    # Mask service instead of removing packages
+    ensure_rsync_is_not_installed_or_the_rsyncd_service_is_masked:
+      keep_rsync: true
+    # Do not expire existing accounts
+    ensure_password_expiration_is_365_days_or_less:
+      enforce_on_current: true
+    # Linux Command Line Warning Banners
+    ensure_message_of_the_day_is_configured_properly:
+      motd_content: "All activities performed on this system will be monitored.\r\n"
+      issue_content: "All activities performed on this system will be monitored.\r\n"
+      issue_net_content: "All activities performed on this system will be monitored.\r\n"
+    # NOTE: Commenting out since this is causing issues with non-puppet applications.
+    # ensure_permissions_on_etcsshsshd_config_are_configured:
+    #   allow_users: ['AllowUsers nobody@anywhere.com']
+    ensure_sudo_is_installed:
+      package_ensure: 'installed'
+      drop_ins:
+        # User and group sudos needed for servicenow install
+        #   lsof path /sbin/lsof (rhel7), /bin/lsof (rhel8)
+        sadiscoverycomlinux_root:
+          user_group: sadiscoverycomlinux
+          priority: 10
+          target_users: root
+          options:
+            - 'NOPASSWD:'
+          commands:
+            - /bin/cat
+            - /usr/sbin/lsof
+            - /sbin/ifconfig
+            - /usr/sbin/dmidecode
+            - /usr/sbin/hwinfo
+            - /sbin/ethtool
+            - /sbin/mii-tool
+            - /bin/find *, /bin/ls
+            - /bin/netstat
+            - /usr/bin/stat
+            - /bin/ps
+            - /bin/grep
+            - /sbin/fdisk -l
+            - /sbin/dmsetup ls
+            - /sbin/dmsetup table
+            - /sbin/multipath -ll
+            - /bin/ping
+            - /usr/bin/pmap
+            - /sbin/lsof -iTCP -n -P -F pcnfT, /bin/lsof -iTCP -n -P -F pcnfT
+            - /opt/puppetlabs/bin/facter -j site_metadata
+        # Tomcat commands
+        sadiscoverycomlinux_tomcat:
+          user_group: sadiscoverycomlinux
+          priority: 20
+          target_users: tomcat
+          options:
+            - 'NOPASSWD:'
+          commands:
+            - /usr/global/tomcat/scripts/tc-stat
+            - /usr/global/tomcat/scripts/tc-oper
+            - /opt/redislabs/bin/rladmin *
+
+# Windows-2019 User account control.
+cem_windows::benchmark: 'cis'
+cem_windows::allow_local_account_rdp: true
+cem_windows::config:
+  profile: 'member_server'
+  level: '1'
+  ignore:
+    - 'c2_2_21'      #Deny access to this computer from the network.
+    - 'c2_2_26'      #Deny log on through Remote Desktop Services is set to 'Guests, Local account'
+    - 'c9_1_1'       #Domain:  Firewall state' is set to 'off'    
+    - 'c9_2_1'       #Private: Firewall state' is set to 'off'.
+    - 'c9_3_1'       #Public:  Firewall state' is set to 'off'
+    - 'c18_8_28_4'   #Enumerate local users on domain-joined computers' is set to 'Disabled'
+    - 'c2_2_11'      #Allow access to this computer from the network
+    - 'c18_3_1'      #Allow local accounts to be used for remote administration (i.e., packer scripts).
+    - 'c18_2_1'      #Ensure LAPS AdmPwd GPO Extension / CSE is installed
+
+  control_configs:
+    c2_3_1_5: # Administrator user control, changing this will cause a break in another class.
+      value: 'Administrator'
+    c2_3_1_6: # Guest user control,changing this will cause a break in another class.
+      value: 'Guest'
+    c18_9_62_3_9_4: #'Disabled User authentication for remote connections by using Network Level Authentication Network Level Authentication'
+      userauthentication: '0'
+    c18_9_102_2:
+      noautoupdate: '0' # Correction over the default in cem module to enable it must be 0
+    c2_3_7_4:
+      value: 'All activities performed on this system will be monitored.' #updated default message to custom
+    c2_3_7_5:
+      value: 'notice and consent banner' #updated default message to custom
+    c9_1_1:
+      value: '1' # Correction over the default in cem module to enable it must be 1
+    c18_5_21_1:
+      fminimizeconnections: '3' # Prevent different conections to internet at same time like ethernet and wifi
+    c18_8_21_5:
+      disablebkgndgrouppolicy: '1' # The policy is enabled. The system waits until the current user logs off the system before updating Group Policy settings.
+    c18_9_62_3_9_1:
+      fpromptforpassword: '1' # Always prompt for password upon connection by Remote Desktop
+    c18_9_80_1_1:
+      shellsmartscreenlevel: 'Block' # warn before users are allowed to run unrecognized programs downloaded from the Internet
+    c18_9_95_1:
+      enablescriptblocklogging: '0' # Disabled PowerShell Script Block Logging reason --possibly expose passwords or other sensitive information to unauthorized users--
+    c2_2_33:
+      users: ['BUILTIN\Administrators', 'Window Manager\Window Manager Group'] # Increase scheduling priority with rights to both groups
+    c18_9_85_2:
+      alwaysinstallelevated: '0' # Always install with elevated privileges' is set to 'Disabled'
+
+
+# Certificates will be installed and trusted on Windows and Linux
+base::ca_certs:
+  CORPROOTCA:
+    thumbprint: '52086bd08c1f5a0587b751c3286fb5bb1f0efdb9'
+    cert_store: 'Root'
+    certificate: |
+      -----BEGIN CERTIFICATE-----
+      MIIDBTCCAe2gAwIBAgIQTJYpOXsdsZZIETKAAz4v7zANBgkqhkiG9w0BAQsFADAV
+      MRMwEQYDVQQDEwpDT1JQUk9PVENBMB4XDTE3MDQyNTE5NDYyMFoXDTI3MDQyNTE5
+      NTYyMFowFTETMBEGA1UEAxMKQ09SUFJPT1RDQTCCASIwDQYJKoZIhvcNAQEBBQAD
+      ggEPADCCAQoCggEBAJprtPs4GvD7wf4gKZWCc0j4c7J42PmGM5E+bNyad06Ui3uS
+      XcbB2DTvzRac3M8hlWkEQsVwvGcHm/zMXwpl2pYitoqeKIk/hCUtJkcAKCWaPVw8
+      UHyTwC9h0bWud/fvD0kCkH3BafJFK6E0DybyEiDiYurykAwR/rpy/FL+z6OdVdf5
+      UAtrtKBdx+UDT9PYveeOFGabtnXSPMep30JJuioEw3L68JAO6Gk5YhJcsoDvHO+l
+      c9Vry5NbRVSS1/fhIEXhe5RWiE7UyblE7I43wpaYuVlOYEuLw1aEMP6TkNd8x/Hm
+      uddyiFdfjCGCEvXTL2vBdzXcJX/cIBfvYVcD7nsCAwEAAaNRME8wCwYDVR0PBAQD
+      AgGGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFIvM7EwtJ/zPBbxN3ebLabLa
+      H4aQMBAGCSsGAQQBgjcVAQQDAgEAMA0GCSqGSIb3DQEBCwUAA4IBAQBLMfmyj9M2
+      VbP8tqoimoQcnvCVtlGCjwrV20KK3wpk9JQTvGfMLPnzF4jQYIRqa++3soTnEitZ
+      plXeytJLCBvN6V0WZFku4c4qCxUdPfdsMNseMrfe8xVgFpwKap0ACXodINH/FnSv
+      pRCPQ1+6LloTfnfnPy0l5Fqki17ETOrh9G8owPEIUEgyB8ZkK8+9BDwEDP5W4TPJ
+      9VhEebD+jHixQem0J5sr9dZO10pQMUixrYT7nkq9fqdv3R3DW+ReuddARWvCKxka
+      N/EHDnqE9QqXZBiv446Jm++6g8JFOIaO3eiz/VExzeonHQl74lvaTUzex1nTvUO5
+      LcSiC2A2o92D
+      -----END CERTIFICATE-----
+  CorpSubCA1:
+    thumbprint: 'e5704f80dffc35fee0b31e098358f69ee81c7cae'
+    certificate: |
+      -----BEGIN CERTIFICATE-----
+      MIIFrjCCBJagAwIBAgITUAAAAAflCzxvf6h2JAAAAAAABzANBgkqhkiG9w0BAQsF
+      ADAVMRMwEQYDVQQDEwpDT1JQUk9PVENBMB4XDTIxMDQxNzE1NTczOVoXDTI2MDQx
+      NzE2MDczOVowQjETMBEGCgmSJomT8ixkARkWA2NvbTEWMBQGCgmSJomT8ixkARkW
+      Bmhld2l0dDETMBEGA1UEAxMKQ29ycFN1YkNBMTCCASIwDQYJKoZIhvcNAQEBBQAD
+      ggEPADCCAQoCggEBAOXr7McJQ+p0+UZfwgPpCuoNooexYQ0E+r/cABvX+vTYBPbL
+      t8HvP9/zP63iE1VdmtczxLQWVLGg8xgJrj5LVYgKW2LutbqMg4URtbofPI9NuIJs
+      2/NxDrJFzzlJnLGDMddZV+AwCclZg33ZIPFwAruU7QFT5L3prjn/JDWuxHnz99aL
+      CiSz0dJ1FNz6D5yoe9Pbc7HZ22aXI32J2gDbQnEPfDPP5YIWId+WKrC5h0pD7pBu
+      7aWzsOW+VPMYn9DXTpUPkidtlw6Yk8sSStlCKfCBju5be9f2qv2B3pw/ZadmWAch
+      +qfTDjvwA2biR1ZDamT7DfL9rB8nVOGTvdcTU40CAwEAAaOCAsgwggLEMBAGCSsG
+      AQQBgjcVAQQDAgEBMCMGCSsGAQQBgjcVAgQWBBR+Gh8ulGDYHcb2Cfcr9v0Oc8aP
+      +TAdBgNVHQ4EFgQUukLX1MyOzx2RBetHiNTOwl10USQwGQYJKwYBBAGCNxQCBAwe
+      CgBTAHUAYgBDAEEwCwYDVR0PBAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0j
+      BBgwFoAUi8zsTC0n/M8FvE3d5stpstofhpAwggECBgNVHR8EgfowgfcwgfSggfGg
+      ge6GgbdsZGFwOi8vL0NOPUNPUlBST09UQ0EsQ049TFNWV0lQQVAwMDEsQ049Q0RQ
+      LENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZp
+      Z3VyYXRpb24sREM9YWQtaGV3aXR0LERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
+      b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnSGMmh0
+      dHA6Ly9pbnRQS0kuaGV3aXR0LmNvbS9DZXJ0RW5yb2xsL0NPUlBST09UQ0EuY3Js
+      MIIBCgYIKwYBBQUHAQEEgf0wgfowgasGCCsGAQUFBzAChoGebGRhcDovLy9DTj1D
+      T1JQUk9PVENBLENOPUFJQSxDTj1QdWJsaWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1T
+      ZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9uLERDPWFkLWhld2l0dCxEQz1jb20/Y0FD
+      ZXJ0aWZpY2F0ZT9iYXNlP29iamVjdENsYXNzPWNlcnRpZmljYXRpb25BdXRob3Jp
+      dHkwSgYIKwYBBQUHMAKGPmh0dHA6Ly9pbnRQS0kuaGV3aXR0LmNvbS9DZXJ0RW5y
+      b2xsL0xTVldJUEFQMDAxX0NPUlBST09UQ0EuY3J0MA0GCSqGSIb3DQEBCwUAA4IB
+      AQARUZU2SAr5wQrOrmDYjabmTPpk8k2GK5T0CmhLq+iuSrqSTRzEzQQVL6IfhDYf
+      19bNQZSVUk13HMZ4UbvO6AhFUtYXKjtYtAKoBxd+b/UeEzXhyoPfVNW3sewavEjX
+      PBR8JxdjAGGAuFi98qJtavoiUCgYPMOBgg0Px/X1iBROe9OBWy6qm4/s3od3OA2V
+      3d3lH7OMfB3eTpMios9l+8fWddty0NTwQM2GQTwI09hOhvgWeuhZTVhIWJDkP3SD
+      1Ql2DVik10Wq3lAI4OGomzk9TzN4mImWXiXIaPF+rLm8cqWjGfht6+vDIBinre9W
+      GJd6tXpf4NLKTxSsH+yUFueq
+      -----END CERTIFICATE-----
+  CorpSubCA2:
+    thumbprint: 'f9d42b49ca4d497f29866588180e4feab05d64f5'
+    certificate: |
+      -----BEGIN CERTIFICATE-----
+      MIIFrjCCBJagAwIBAgITUAAAAAYKuPI4wyM4UAAAAAAABjANBgkqhkiG9w0BAQsF
+      ADAVMRMwEQYDVQQDEwpDT1JQUk9PVENBMB4XDTIxMDQxNzE1MjcyNloXDTI2MDQx
+      NzE1MzcyNlowQjETMBEGCgmSJomT8ixkARkWA2NvbTEWMBQGCgmSJomT8ixkARkW
+      Bmhld2l0dDETMBEGA1UEAxMKQ29ycFN1YkNBMjCCASIwDQYJKoZIhvcNAQEBBQAD
+      ggEPADCCAQoCggEBALOZckDVHjbmvOjq7rk8beNEI5gKPoU0ar657aZ/I5AT15UK
+      XmYay3JlPZJPtZOIn8Np9CtOO2iusMvc9lB8ecFS2slYhjB/RNKjLetawv4inkpb
+      5t0E5jKJnE4QKtitvdZP5TfX+tYunyvmZHTensg7Zv2US8cvBi881zkJerc9X5kh
+      oFMcHEhNonxxabJShs0JCvofY2J+ulVgnyEJCaHQPAjGz/+njl8PL/7by3g6MiDT
+      WSVnbi6wtme74v2taE5oJWBM5w0bllTJRuQk3HoYMojP/PQfa2cXNt9iiml7k5lG
+      xZ4h7GvqYiog7TDfieE6o7IA9+Q3LPZ7EFWExQ0CAwEAAaOCAsgwggLEMBAGCSsG
+      AQQBgjcVAQQDAgEBMCMGCSsGAQQBgjcVAgQWBBQ18nifXgmtaSq4MuiSh6QOdAoy
+      TTAdBgNVHQ4EFgQUFc/DFXBYs3Sek1MG24C6jcl8wEUwGQYJKwYBBAGCNxQCBAwe
+      CgBTAHUAYgBDAEEwCwYDVR0PBAQDAgGGMA8GA1UdEwEB/wQFMAMBAf8wHwYDVR0j
+      BBgwFoAUi8zsTC0n/M8FvE3d5stpstofhpAwggECBgNVHR8EgfowgfcwgfSggfGg
+      ge6GgbdsZGFwOi8vL0NOPUNPUlBST09UQ0EsQ049TFNWV0lQQVAwMDEsQ049Q0RQ
+      LENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZpY2VzLENOPUNvbmZp
+      Z3VyYXRpb24sREM9YWQtaGV3aXR0LERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
+      b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnSGMmh0
+      dHA6Ly9pbnRQS0kuaGV3aXR0LmNvbS9DZXJ0RW5yb2xsL0NPUlBST09UQ0EuY3Js
+      MIIBCgYIKwYBBQUHAQEEgf0wgfowgasGCCsGAQUFBzAChoGebGRhcDovLy9DTj1D
+      T1JQUk9PVENBLENOPUFJQSxDTj1QdWJsaWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1T
+      ZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9uLERDPWFkLWhld2l0dCxEQz1jb20/Y0FD
+      ZXJ0aWZpY2F0ZT9iYXNlP29iamVjdENsYXNzPWNlcnRpZmljYXRpb25BdXRob3Jp
+      dHkwSgYIKwYBBQUHMAKGPmh0dHA6Ly9pbnRQS0kuaGV3aXR0LmNvbS9DZXJ0RW5y
+      b2xsL0xTVldJUEFQMDAxX0NPUlBST09UQ0EuY3J0MA0GCSqGSIb3DQEBCwUAA4IB
+      AQCJmidlXAjO/J5KBNsU9VlQwDdwBbBw1K1J8k+YrVn4I0DRPWztTNHs/+DlfrCZ
+      JsR4AMsPOGsgsXHC8O9ZDWcqrJn0ScIKb6P1EgnqoMGpRUu1oJiXSBMCiNw9XIZL
+      cAha5UWJHK614RNT0D9WqmxzlDoGWAS6B7Xb8g1BsZ0Ow0aprI9LLRAwA3cG8j4i
+      0L77oiO1fOnufBffNCa0T06JkX6NH2LHCXheavql2ODe98Y6Rgn+UayJ0nJTHITC
+      S6mxESStAF9xI3yURsrKtDxBU66C83KnstUVLuPAM8ygrDEyFsL+FgXqjogCr5hf
+      /d4vwcqKRm2yAz5yyZwgk3+s
+      -----END CERTIFICATE-----
+
+
+# Globally disable purging config files from consul
+consul::purge_config_dir: false
+
+# New Relic Prod Key
+base::newrelic::license_key: '44d76f00a7d35e06b1cfce3530fbc97fd97aNRAL'
+
+# Puppet agent version for upgrades (i.e., existing servers).
+puppet_agent::package_version: '6.25.1'
+
+# Puppet agent version for new deployments (i.e., utilized by puppet bootstrap script).
+pe_repo::platform::el_7_x86_64::agent_version: '6.25.1'
+pe_repo::platform::el_8_x86_64::agent_version: '6.25.1'
+pe_repo::platform::windows_x86_64::agent_version: '6.25.1'
+
+okta_asa::service_user_key: 'af4b10bd-9602-493f-bc32-4ec6a4b06243'
+okta_asa::service_user_token: 'GdmUAvmRd01XulsaoKacKbev6Uhy525p7BcVo0HTcgEDhYRPSqzrG83gVovCV3KotpWPm1+jPD7x2Agn6TkPZw=='
+
+#MS Defender - Add excluded file/folder/processes
+base::mdatp::excludedpaths: 
+  - /apps/Benefits/newrelic/
+  - /apps/consul/
+  - /apps/docker/
+  - /apps/elasticsearch/
+  - /apps/Oracle/
+  - /apps/tcserver/install/java/current/bin/java
+  - /apps/WebSphere/install/8.5.5020.20210708_1826/java/
+  - /etc/amazon/ssm/
+  - /etc/alternatives/jre_11/bin/java
+  - /opt/aws/amazon-cloudwatch-agent/
+  - /opt/containerd/
+  - /opt/mongodb-mms-automation/
+  - /opt/nessus_agent/
+  - /opt/puppetlabs/
+  - /opt/redislabs/
+  - /opt/VRTSpbx/
+  - /opt/vormetric/
+  - /usr/openv/  
+  - /var/lib/containerd
+  - /var/lib/kubelet
+base::mdatp::excludedfilenames:
+  - amazon-cloudwatch-agent
+  - bpcd
+  - newrelic-infra
+  - nessusd
+  - nbdisco
+  - pbx_exchange
+  - puppet
+  - pxp-agent
+  - ssm-agent-worker
+  - vnetd
+  - /apps/oracle/product/19.10.0.0/bin/tnslsnr
+  - /opt/mongodb-mms-automation/bin/mongodb-mms-automation-agent
+  - /opt/redislabs/config/ccs-redis.conf
+  - /opt/VRTSpbx/bin/pbx_exchange
+  - /opt/vormetric/DataSecurityExpert/agent/secfs/.sec/bin/secfsd
+  - /usr/local/aws-cli/v2/2.1.31/dist/aws
+  - /usr/local/bin/consul
+  - /usr/bin/containerd-shim-runc-v2
+  - /usr/bin/dbus-daemon
+  - /usr/bin/ssm-agent-worker
+  - /usr/sbin/semodule
+  - /var/lib/mongodb-mms-automation/mongodb-linux-x86_64-4.4.10-ent/bin/mongod
