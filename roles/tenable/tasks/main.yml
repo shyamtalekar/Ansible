@@ -44,13 +44,18 @@
           --groups="{{nessus_agent_group}}"
     become: yes
   when: nessus_agent_service_status.stdout is search('Not linked to')
-  
+
+  - name: Link Nessus Agent to Nessus Manager
+    - msg: "Skipping linking Nessus agent to Nessus Manager for {{ inventory_hostname }}"
+    become: yes
+  when: nessus_agent_service_status.stdout is search('is linked to') and base_ami_build and nessus_license_key is undefined
+
 - name: Make sure a service is running
   systemd:
     state: started
     enabled: true
     name: "{{ nessus_agent_service_name }}"
-  when: "{{ ami_build | bool }}" == True or nessus_license_key is defined or nessus_license_key != ''
+  when: base_ami_build or nessus_license_key is defined or nessus_license_key != ''
 
 - block: 
 
@@ -61,4 +66,4 @@
       state: stopped
       enabled: false
       name: "{{ nessus_agent_service_name }}"
-  when: "{{ ami_build | bool }}" == False or nessus_license_key is undefined or nessus_license_key == ''
+  when: not base_ami_build or nessus_license_key is undefined or nessus_license_key == ''
