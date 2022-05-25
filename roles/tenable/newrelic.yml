@@ -1,0 +1,64 @@
+---
+#Install the New Relic Agent
+
+- amazon.aws.ec2_metadata_facts:
+  register: ec2_results
+
+
+- set_fact: 
+    account_id: "account_{{ ec2_results.ansible_facts.ansible_ec2_instance_identity_document_accountid }}"
+
+
+- name: Setting license key from account if it exists 
+  set_fact: 
+    base_newrelic_license_key: "{{ newrelic_license_keys[account_id]['license_key'] }}"  
+  when: newrelic_license_keys[account_id]['license_key'] is defined
+
+
+- set_fact: 
+    newrelic_service_ensure: "stopped"
+    newrelic_service_enable: false
+  when: not base_ami_build or base_newrelic_license_key == '' or base_newrelic_license_key is not defined
+
+- set_fact: 
+    newrelic_service_ensure: "running"
+    newrelic_service_enable: true
+  when: base_ami_build or base_newrelic_license_key != '' or base_newrelic_license_key is defined
+
+- name: Install the NewRelic dependency tdagent from Artifactory
+  yum: 
+    name: "{{ base_tdagent_source }}"
+    state: "present"
+    disable_gpg_check: "yes" 
+  register: installation_status
+
+- name: Install NewRelic agent 
+  yum: 
+    name: "{{ base_newrelic_infra_source }}"
+    state: "present"
+    disable_gpg_check: "yes"
+  register: installation_status
+
+- name: Register agent to web master/console
+  template: 
+    src: "newrelic-infra.yml.j2"
+    dest: "/etc/newrelic-infra.yml"
+    owner: "root" 
+    group: "root" 
+    mode: "0640"
+  register: config_file
+
+- name: Ensure newrelic-infra is running
+  service: 
+    name: newrelic-infra
+    state: restarted 
+    enabled: "yes"
+  when: config_file is changed or installation_status is changed
+
+- name: Remove pidFile
+  file: 
+   path: "/var/run/newrelic-infra/newrelic-infra.pid" 
+   state: "absent"
+  when: config_file is changed or installation_status is changed
+
+
