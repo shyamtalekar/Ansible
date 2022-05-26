@@ -1,0 +1,3 @@
+base::cte_agent::cte_source: "%{lookup('artifactory_url')}/ciphertrust-generic-local"
+base::cte_agent::reg_token: CpnKiV5DD7ZK99REoLYlSWPTbdMBjdHYo90qk5uKsuZTNpoHIvTonTyxL8W23uwm
+base::cte_agent::server_hostname: 'ciprtrstmgrpr1-pla.apissa.aws.alight.com'
