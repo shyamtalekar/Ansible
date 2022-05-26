@@ -1,11 +1,18 @@
 ---
-#Install the Tenable Agent
+#Step 1: Install the Tenable Agent
 
 - name: Tenable - Install the Tenable dependency nessusagent from Artifactory
   yum: 
     name: "{{ nessus_source_url }}/NessusAgent-{{ nessus_agent_version }}-es{{ ansible_distribution_major_version  }}.x86_64.rpm"
     state: "present"
     disable_gpg_check: "yes" 
+
+- block:
+  - name: Tenable - Skipping Linking Nessus Agent to Nessus Manager
+    debug:
+      msg: "Skipping linking Nessus agent to Nessus Manager for {{ nessus_agent_host }}"
+    become: yes
+  when: (not base_ami_build) or (nessus_license_key is undefined) or (nessus_license_key == '')
 
 - block: 
   - name: Tenable - Check Nessus Agent
@@ -14,35 +21,30 @@
     changed_when: false
     ignore_errors: yes
     register: nessus_agent_service_status
+
+  - name: Tenable - Skipping Linking Nessus Agent to Nessus Manager
+    debug:
+      msg: "Skipping linking Nessus agent to Nessus Manager for {{ nessus_agent_host }}"
+    become: yes
+#    when: nessus_agent_service_status.stdout is search('Connected to') or base_ami_build or nessus_license_key is undefined
+    when: nessus_agent_service_status.stdout is search('Connected to')
+
+  - name: Tenable - Link Nessus Agent to Nessus Manager
+    command: "{{ item }}"
+    with_items: 
+      - "{{ nessus_agent_path }}" fix --set process_priority='low'
+      - "{{ nessus_agent_path }}" fix --set update_hostname='yes'
+      - "{{ nessus_agent_path }}" agent link \
+        --key={{ nessus_license_key }} \ 
+        --host={{ nessus_agent_host }} \
+        --port={{ nessus_agent_port }} \
+        --groups="{{ nessus_agent_group }}"
+    become: yes
+    when: nessus_agent_service_status.stdout is search('Not linked to')
   when: nessus_license_key is defined or nessus_license_key != ''
 
-- block: 
-  - name: Tenable - Fix process priority for nessuscli
-    command: > 
-          {{ nessus_agent_path }} fix --set process_priority='low'
-    become: yes
-  
-  - name: Tenable - Allow update_hostname for nessuscli 
-    command: > 
-          {{ nessus_agent_path }} fix --set update_hostname='yes'
-    become: yes
-  
-  - block:
-    - name: Tenable - Skipping Linking Nessus Agent to Nessus Manager
-      debug:
-        msg: "Skipping linking Nessus agent to Nessus Manager for {{ nessus_agent_host }}"
-      become: yes
-      when: nessus_agent_service_status.stdout is search('Connected to') or base_ami_build or nessus_license_key is undefined
-      
-    - name: Tenable - Link Nessus Agent to Nessus Manager
-      command: > 
-            {{ nessus_agent_path }} agent link
-            --key={{ nessus_license_key }}
-            --host={{ nessus_agent_host }}
-            --port={{ nessus_agent_port }}
-            --groups="{{ nessus_agent_group }}"
-      become: yes
-      when: nessus_agent_service_status.stdout is search('Not linked to')
+# Step 3: If ami_build is false and licence_key is undefined then, stop the nessus service.
+# If ami_build is true and licence_key is defined then, start the nessus service.
 
 - name: Tenable - Make sure a service is running
   systemd:
@@ -56,4 +58,5 @@
     state: stopped
     enabled: false
     name: "{{ nessus_agent_service_name }}"
-  when: (base_ami_build) or (nessus_license_key is undefined) or (nessus_license_key == '')
+  #when: (base_ami_build) or (nessus_license_key is undefined) or (nessus_license_key == '')
+  when: (not base_ami_build) or (nessus_license_key is undefined) or (nessus_license_key == '')
