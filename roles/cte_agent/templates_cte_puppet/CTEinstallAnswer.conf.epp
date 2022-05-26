@@ -1,0 +1,12 @@
+<%- | String $server_hostname,
+      String $reg_token
+| -%>
+SERVER_HOSTNAME=<%= $server_hostname %>
+REG_TOKEN=<%= $reg_token %>
+HOST_DESC=""
+USEHWSIG=0
+ENABLE_ES=0
+ENABLE_CLOUD=0
+ENABLE_LDT=1
+HOST_PROFILE=
+HOST_GROUP=
