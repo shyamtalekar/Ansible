@@ -1,0 +1,52 @@
+---
+# Gather ec2 instance facts
+- name: Gather facts
+  action: ec2_facts
+
+- name: Get instance ec2 facts
+  action: ec2_facts
+  register: ec2_facts
+
+- set_fact: 
+    ensure: 'present'
+  when: (ec2_tags.tags.CipherTrustManagement) and (ec2_tags.tags.CipherTrustManagement == 'true')
+
+- set_fact: 
+    ensure: 'absent'
+  when: 
+  - not ec2_tags.tags.CipherTrustManagement
+  - (ec2_tags.tags.CipherTrustManagement) and (ec2_tags.tags.CipherTrustManagement != 'present')
+
+- block: 
+  - block: 
+    - name: copy CTEintallAnswer.conf using jinja
+      template: 
+        owner: root
+        group: root
+        mode: '0644'
+        src: templates/CTEinstallAnswer.conf.jinja
+        dest: "{{ answer_file }}"
+
+    - name: Download CTE agent
+      get_url:
+        url: "{{ cte_source }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
+        dest: "{{ scratch_dir }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Check vmsec available
+      stat: 
+        path: /bin/vmsec
+      register: vmsec_bin
+  
+    - name: Install CTE agent
+      command: "{{ scratch_dir }}/vee-fs-7.1.1-71-rh8-x86_64.bin -s {{ answer_file }} -t {{ scratch_dir }}"
+      when: not vmsec_bin.stat.exists
+
+    when: ensure == 'present'
+  when: ansible_system == "Linux"
+
+- block: 
+    msg: "CTE Agent is not yet supported on this platform on {{ inventory_hostname }}" 
+  when: not ansible_system == "Linux" or ansible_system == "Windows"

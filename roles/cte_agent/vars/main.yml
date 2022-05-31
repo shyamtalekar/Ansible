@@ -1,0 +1,9 @@
+---
+
+artifactory_url: "https://artifactory.alight.com:443/artifactory"
+cte_source: "{{artifactory_url}}/ciphertrust-generic-local"
+reg_token: CpnKiV5DD7ZK99REoLYlSWPTbdMBjdHYo90qk5uKsuZTNpoHIvTonTyxL8W23uwm
+server_hostname: 'ciprtrstmgrpr1-pla.apissa.aws.alight.com'
+
+answer_file: '/tmp/CTEinstallAnswer.conf'
+scratch_dir: '/opt/puppetlabs/scratch'
