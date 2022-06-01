@@ -44,6 +44,6 @@
     when: ensure == 'present'
   when: ansible_system == "Linux"
 
-- block: 
+- debug: 
     msg: "CTE Agent is not yet supported on this platform on {{ inventory_hostname }}" 
   when: ansible_system != "Linux" and ansible_system != "Windows"
