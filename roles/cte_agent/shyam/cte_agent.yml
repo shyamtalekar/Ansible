@@ -1,10 +1,15 @@
 ---
 # tasks file for role-cte_agent
 
-# Gather ec2 instance facts
-- name: Get instance ec2 facts
-  ec2_metadata_facts:
+- name: Retrieve all tags on an instance
+  amazon.aws.ec2_tag_info:
+    region: us-east-1
+    resource: i-xxxxxxxxxxxxxx
   register: ec2_tags
+  
+- name: Print ec2_tags variable
+  debug:
+    var: ec2_tags
 
 - set_fact: 
     ensure: 'present'
