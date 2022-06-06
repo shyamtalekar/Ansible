@@ -4,8 +4,16 @@
 - name: Retrieve all tags on an instance
   amazon.aws.ec2_tag_info:
     region: us-east-1
-    resource: i-xxxxxxxxxxxxxx
+    resource: i-05d3c2f715fccc145
   register: ec2_tags
+
+- name: Retrieve all tags on an instance
+  amazon.aws.ec2_metadata_facts:
+  register: ec2_instance
+
+- name: debug
+  debug:
+    msg: "{{ansible_facts}}"
   
 - name: Print ec2_tags variable
   debug:
