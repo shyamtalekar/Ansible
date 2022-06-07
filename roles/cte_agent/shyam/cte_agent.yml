@@ -1,27 +1,25 @@
 ---
 # tasks file for role-cte_agent
 
-- name: Retrieve all tags on an instance
-  amazon.aws.ec2_tag_info:
-    region: us-east-1
-    resource: i-05d3c2f715fccc145
-  register: ec2_tags
-
-- name: Retrieve all tags on an instance
+- name: Retrieve all information about the instance
   amazon.aws.ec2_metadata_facts:
   register: ec2_instance
 
-- name: debug
-  debug:
-    msg: "{{ansible_facts}}"
-  
-- name: Print ec2_tags variable
-  debug:
-    var: ec2_tags
 - name: Print ec2_instance variable
   debug:
     var: ec2_instance
 
+- name: Retrieve all tags on an instance
+  amazon.aws.ec2_tag_info:
+    #region: us-east-1
+    region: "{{ ec2_instance.ansible_facts.ansible_ec2_placement_region }}"
+    #resource: i-05d3c2f715fccc145
+    resource: "{{ ec2_instance.ansible_facts.ansible_ec2_instance_id }}"
+  register: ec2_tags
+
+- name: Print ec2_tags variable
+  debug:
+    var: ec2_tags
 
 - set_fact: 
     ensure: 'present'
