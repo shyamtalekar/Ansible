@@ -11,14 +11,18 @@
   amazon.aws.ec2_metadata_facts:
   register: ec2_instance
 
-  #- name: debug
-  #  debug:
-  #    msg: "{{ansible_facts}}"
-  #  
-  #- name: Print ec2_tags variable
-  #  debug:
-  #    var: ec2_tags
-  #
+- name: debug
+  debug:
+    msg: "{{ansible_facts}}"
+  
+- name: Print ec2_tags variable
+  debug:
+    var: ec2_tags
+- name: Print ec2_instance variable
+  debug:
+    var: ec2_instance
+
+
 - set_fact: 
     ensure: 'present'
   #when: (ec2_tags.tags.CipherTrustManagement) and ((ec2_tags.tags.CipherTrustManagement |lower)  == 'true')
@@ -38,25 +42,28 @@
         owner: root
         group: root
         mode: '0644'
-        src: "CTEinstallAnswer.conf.jinja"
+        #src: "CTEinstallAnswer.conf.j2"
+        src: "/home/shyam/linux-base-test-node/playbook-linux-base/roles/role-cte_agent/templates/CTEinstallAnswer.conf.j2"
         dest: "{{ answer_file }}"
 
-        #    - name: Download CTE agent
-        #      get_url:
-        #        url: "{{ cte_source }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
-        #        dest: "{{ scratch_dir }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
-        #        owner: root
-        #        group: root
-        #        mode: '0755'
-        #
-        #    - name: Check vmsec available
-        #      stat: 
-        #        path: /bin/vmsec
-        #      register: vmsec_bin
-        #  
-        #    - name: Install CTE agent
-        #      command: "{{ scratch_dir }}/vee-fs-7.1.1-71-rh8-x86_64.bin -s {{ answer_file }} -t {{ scratch_dir }}"
-        #      when: not vmsec_bin.stat.exists
+    - name: Download CTE agent
+      get_url:
+        url: "{{ cte_source }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
+        #dest: "{{ scratch_dir }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
+        dest: /tmp/vee-fs-7.1.1-71-rh8-x86_64.bin
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Check vmsec available
+      stat: 
+        path: /bin/vmsec
+      register: vmsec_bin
+  
+    - name: Install CTE agent
+      #command: "{{ scratch_dir }}/vee-fs-7.1.1-71-rh8-x86_64.bin -s {{ answer_file }} -t {{ scratch_dir }}"
+      command: "/tmp/vee-fs-7.1.1-71-rh8-x86_64.bin -s {{ answer_file }} -t /tmp"
+      when: not vmsec_bin.stat.exists
 
     when: ensure == 'present'
   when: ansible_system == "Linux"
