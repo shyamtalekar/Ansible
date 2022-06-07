@@ -21,13 +21,16 @@
 
 - set_fact: 
     ensure: 'present'
-  when: (ec2_tags.tags.CipherTrustManagement) and ((ec2_tags.tags.CipherTrustManagement |lower)  == 'true')
+  #when: (ec2_tags.tags.CipherTrustManagement) and ((ec2_tags.tags.CipherTrustManagement |lower)  == 'true')
+  when: (ec2_tags.tags.CipherTrustManagement is defined) and ((ec2_tags.tags.CipherTrustManagement |lower)  == 'true')
 
 - set_fact: 
     ensure: 'absent'
   when: 
-  - not ec2_tags.tags.CipherTrustManagement
-  - (ec2_tags.tags.CipherTrustManagement) and ((ec2_tags.tags.CipherTrustManagement|lower) != 'present')
+  - ec2_tags.tags.CipherTrustManagement is not defined
+  #- not ec2_tags.tags.CipherTrustManagement
+  #- (ec2_tags.tags.CipherTrustManagement) and ((ec2_tags.tags.CipherTrustManagement|lower) != 'present')
+  - (ec2_tags.tags.CipherTrustManagement is defined) and ((ec2_tags.tags.CipherTrustManagement|lower) != 'present')
 
 - block: 
   - block: 
