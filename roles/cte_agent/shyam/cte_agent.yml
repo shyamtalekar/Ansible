@@ -53,6 +53,12 @@
         group: root
         mode: '0755'
 
+    - name: Install dependency for vee-fs
+      yum: 
+        name: httpd
+        state: installed
+        update_cache: yes
+
     - name: Check vmsec available
       stat: 
         path: /bin/vmsec
