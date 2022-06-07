@@ -1,0 +1,812 @@
+[ec2-user@i-00a45f93e5d4c2016 linux-base-test-node]$ cat log 
+
+PLAY [Playbook for Configuring Linux Base] *************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [10.17.65.244]
+
+TASK [Retrieve all tags on an instance] ****************************************
+ok: [10.17.65.244]
+
+TASK [Retrieve all tags on an instance] ****************************************
+ok: [10.17.65.244]
+
+TASK [debug] *******************************************************************
+ok: [10.17.65.244] => {
+    "msg": {
+        "all_ipv4_addresses": [
+            "10.17.65.244"
+        ],
+        "all_ipv6_addresses": [
+            "fe80::11:9eff:fefa:cbd9"
+        ],
+        "ansible_local": {},
+        "apparmor": {
+            "status": "disabled"
+        },
+        "architecture": "x86_64",
+        "bios_date": "10/16/2017",
+        "bios_vendor": "Amazon EC2",
+        "bios_version": "1.0",
+        "board_asset_tag": "i-05d3c2f715fccc145",
+        "board_name": "NA",
+        "board_serial": "NA",
+        "board_vendor": "Amazon EC2",
+        "board_version": "NA",
+        "chassis_asset_tag": "Amazon EC2",
+        "chassis_serial": "NA",
+        "chassis_vendor": "Amazon EC2",
+        "chassis_version": "NA",
+        "cmdline": {
+            "BOOT_IMAGE": "(hd0,gpt2)/boot/vmlinuz-4.18.0-348.12.2.el8_5.x86_64",
+            "console": "tty0",
+            "crashkernel": "auto",
+            "net.ifnames": "0",
+            "nvme_core.io_timeout": "4294967295",
+            "rd.blacklist": "nouveau",
+            "root": "UUID=ea34d7b4-bd16-43bd-8a0c-c534a23a591a"
+        },
+        "date_time": {
+            "date": "2022-06-07",
+            "day": "07",
+            "epoch": "1654591509",
+            "epoch_int": "1654591509",
+            "hour": "03",
+            "iso8601": "2022-06-07T08:45:09Z",
+            "iso8601_basic": "20220607T034509194740",
+            "iso8601_basic_short": "20220607T034509",
+            "iso8601_micro": "2022-06-07T08:45:09.194740Z",
+            "minute": "45",
+            "month": "06",
+            "second": "09",
+            "time": "03:45:09",
+            "tz": "CDT",
+            "tz_dst": "CDT",
+            "tz_offset": "-0500",
+            "weekday": "Tuesday",
+            "weekday_number": "2",
+            "weeknumber": "23",
+            "year": "2022"
+        },
+        "default_ipv4": {
+            "address": "10.17.65.244",
+            "alias": "eth0",
+            "broadcast": "10.17.65.255",
+            "gateway": "10.17.65.1",
+            "interface": "eth0",
+            "macaddress": "02:11:9e:fa:cb:d9",
+            "mtu": 9001,
+            "netmask": "255.255.255.0",
+            "network": "10.17.65.0",
+            "type": "ether"
+        },
+        "default_ipv6": {},
+        "device_links": {
+            "ids": {
+                "nvme0n1": [
+                    "nvme-Amazon_Elastic_Block_Store_vol06bd0b9b15c0aa7a1",
+                    "nvme-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001"
+                ],
+                "nvme0n1p1": [
+                    "nvme-Amazon_Elastic_Block_Store_vol06bd0b9b15c0aa7a1-part1",
+                    "nvme-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part1",
+                    "wwn-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part1"
+                ],
+                "nvme0n1p2": [
+                    "nvme-Amazon_Elastic_Block_Store_vol06bd0b9b15c0aa7a1-part2",
+                    "nvme-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part2",
+                    "wwn-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part2"
+                ]
+            },
+            "labels": {
+                "nvme0n1p2": [
+                    "root"
+                ]
+            },
+            "masters": {},
+            "uuids": {
+                "nvme0n1p2": [
+                    "ea34d7b4-bd16-43bd-8a0c-c534a23a591a"
+                ]
+            }
+        },
+        "devices": {
+            "nvme0n1": {
+                "holders": [],
+                "host": "Non-Volatile memory controller: Amazon.com, Inc. NVMe EBS Controller",
+                "links": {
+                    "ids": [
+                        "nvme-Amazon_Elastic_Block_Store_vol06bd0b9b15c0aa7a1",
+                        "nvme-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001"
+                    ],
+                    "labels": [],
+                    "masters": [],
+                    "uuids": []
+                },
+                "model": "Amazon Elastic Block Store",
+                "partitions": {
+                    "nvme0n1p1": {
+                        "holders": [],
+                        "links": {
+                            "ids": [
+                                "nvme-Amazon_Elastic_Block_Store_vol06bd0b9b15c0aa7a1-part1",
+                                "nvme-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part1",
+                                "wwn-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part1"
+                            ],
+                            "labels": [],
+                            "masters": [],
+                            "uuids": []
+                        },
+                        "sectors": "2048",
+                        "sectorsize": 512,
+                        "size": "1.00 MB",
+                        "start": "2048",
+                        "uuid": null
+                    },
+                    "nvme0n1p2": {
+                        "holders": [],
+                        "links": {
+                            "ids": [
+                                "nvme-Amazon_Elastic_Block_Store_vol06bd0b9b15c0aa7a1-part2",
+                                "nvme-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part2",
+                                "wwn-nvme.1d0f-766f6c3036626430623962313563306161376131-416d617a6f6e20456c617374696320426c6f636b2053746f7265-00000001-part2"
+                            ],
+                            "labels": [
+                                "root"
+                            ],
+                            "masters": [],
+                            "uuids": [
+                                "ea34d7b4-bd16-43bd-8a0c-c534a23a591a"
+                            ]
+                        },
+                        "sectors": "20967324",
+                        "sectorsize": 512,
+                        "size": "10.00 GB",
+                        "start": "4096",
+                        "uuid": "ea34d7b4-bd16-43bd-8a0c-c534a23a591a"
+                    }
+                },
+                "removable": "0",
+                "rotational": "0",
+                "sas_address": null,
+                "sas_device_handle": null,
+                "scheduler_mode": "none",
+                "sectors": "20971520",
+                "sectorsize": "512",
+                "size": "10.00 GB",
+                "support_discard": "0",
+                "vendor": null,
+                "virtual": 1
+            }
+        },
+        "discovered_interpreter_python": "/usr/libexec/platform-python",
+        "distribution": "RedHat",
+        "distribution_file_parsed": true,
+        "distribution_file_path": "/etc/redhat-release",
+        "distribution_file_search_string": "Red Hat",
+        "distribution_file_variety": "RedHat",
+        "distribution_major_version": "8",
+        "distribution_release": "Ootpa",
+        "distribution_version": "8.5",
+        "dns": {
+            "nameservers": [
+                "10.17.64.2"
+            ],
+            "search": [
+                "ec2.internal"
+            ]
+        },
+        "domain": "ec2.internal",
+        "ec2_ami_id": "ami-019599717e2dd5baa",
+        "ec2_ami_launch_index": "0",
+        "ec2_ami_manifest_path": "(unknown)",
+        "ec2_block_device_mapping_ami": "sda1",
+        "ec2_block_device_mapping_root": "/dev/sda1",
+        "ec2_events_maintenance_history": "[]",
+        "ec2_events_maintenance_scheduled": "[]",
+        "ec2_fws_instance_monitoring": "enabled",
+        "ec2_hibernation_configured": "false",
+        "ec2_hostname": "ip-10-17-65-244.ec2.internal",
+        "ec2_iam_info": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:41:07Z\",\n  \"InstanceProfileArn\" : \"arn:aws:iam::735193432042:instance-profile/EC2SSMDefault\",\n  \"InstanceProfileId\" : \"AIPA2WLHRP7VGWYLN6ZPS\"\n}",
+        "ec2_iam_info_code": "Success",
+        "ec2_iam_info_instanceprofilearn": "arn:aws:iam::735193432042:instance-profile/EC2SSMDefault",
+        "ec2_iam_info_instanceprofileid": "AIPA2WLHRP7VGWYLN6ZPS",
+        "ec2_iam_info_lastupdated": "2022-06-07T08:41:07Z",
+        "ec2_iam_instance_profile_role": "EC2SSMDefault",
+        "ec2_iam_security_credentials_EC2SSMDefault": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:41:20Z\",\n  \"Type\" : \"AWS-HMAC\",\n  \"AccessKeyId\" : \"ASIA2WLHRP7VKU4X3WTA\",\n  \"SecretAccessKey\" : \"OvYs2p9YtrCklri+LUS5xgJfkBw04WE4MmVkXMKq\",\n  \"Token\" : \"IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQCkKwWEdyl4kcGi/JSmuGKRKAtHdoeoR/urGS2KiND1uwIgIByPEqDfxA0g16MK4QKm5lbd72pRwaTtRosItW5nrKoq2wQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDOpAPmeZSchqilUgPSqvBI9mGv2S9VyQ/tNRIkgyxnUNjsVYQ5pgzH5caFz6upIJXFjh0mwfgXFtxM1jwM25vTudhem6gpbvBfhqgNWRi/Pj0lrXa4ULdc5B1kwMr9N9zZOist5FjJkwR/dP2ePsyTXMMgulw9cExvIJhFfILvsMlkDPt9e+b8C2DzuUI3nz4C5DUHhJM+hafIsCZkCsCUhSoVE0ZlykLhEisim5L32S2WQE0PtmfjfUR4mrb/MedYzbp0/Ax1QCongzxUE0PrKrOnF9ezc4O8W4eiOHaU99WOXFuQ6r6OgqGXzKAnS67boTTf+9xjvychWku7lanby+OSUMPdOqZ7xv6n2tmlQTFvGFDiw1Ffv/wMTendDmKgsB2PPe8zd5IxpGJgCsg/IMNnI/0KuUUznHhBmshGem/jcfn9QQqkLG3MuwguS6PPUOZIaWtqih6ne3LU3SW2p+CWlis68xleANTTNZ5lh6yPmW/sd9Wo+09p4y4qzueVukteDVzIt2lgohnjuleC5bN/iYe07z0lAY6C0HjWpaeW0ZPds7o1nAgz7eRZ+Pn25yFVcC/YMm1SW7WApQZgRjoiC3toDMhtY0KUkvOFr/HHRe9vrhgTJIQu2MV6LjbphauOrjgXDx//79XQneHf5HH8iuB9oMLki1vo5bCQCphavQ5fwq8mNJysPHmUyh2zx25q11PDu0IcJznbvcuszZ4y3B5G0ZgkN9uFBStFqgNQXCgs2DL98hfuqrGncwo578lAY6qQEp+qgDZRssdWODr54gBV1Y4RnEGraCxvo0YsB6EkfS5cBpV/+VUT5+i1vy2yoFgekMzAN8nUZr/rKoG5wpdS6rVFs3H4Mc38PrfMwr5WjHKyhPnzessIhVB8n5SgYxr/dfOqYWlkCsjC5RMUvXKos7zOBNdymfOWO88t7xGobS1AlPIHPYm+/6WheiJD6UUgmb8hDE9R0t+Mod+ajusMWWQrFC2KwqcTqU\",\n  \"Expiration\" : \"2022-06-07T14:51:23Z\"\n}",
+        "ec2_iam_security_credentials_EC2SSMDefault_accesskeyid": "ASIA2WLHRP7VKU4X3WTA",
+        "ec2_iam_security_credentials_EC2SSMDefault_code": "Success",
+        "ec2_iam_security_credentials_EC2SSMDefault_expiration": "2022-06-07T14:51:23Z",
+        "ec2_iam_security_credentials_EC2SSMDefault_lastupdated": "2022-06-07T08:41:20Z",
+        "ec2_iam_security_credentials_EC2SSMDefault_secretaccesskey": "OvYs2p9YtrCklri+LUS5xgJfkBw04WE4MmVkXMKq",
+        "ec2_iam_security_credentials_EC2SSMDefault_token": "IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQCkKwWEdyl4kcGi/JSmuGKRKAtHdoeoR/urGS2KiND1uwIgIByPEqDfxA0g16MK4QKm5lbd72pRwaTtRosItW5nrKoq2wQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDOpAPmeZSchqilUgPSqvBI9mGv2S9VyQ/tNRIkgyxnUNjsVYQ5pgzH5caFz6upIJXFjh0mwfgXFtxM1jwM25vTudhem6gpbvBfhqgNWRi/Pj0lrXa4ULdc5B1kwMr9N9zZOist5FjJkwR/dP2ePsyTXMMgulw9cExvIJhFfILvsMlkDPt9e+b8C2DzuUI3nz4C5DUHhJM+hafIsCZkCsCUhSoVE0ZlykLhEisim5L32S2WQE0PtmfjfUR4mrb/MedYzbp0/Ax1QCongzxUE0PrKrOnF9ezc4O8W4eiOHaU99WOXFuQ6r6OgqGXzKAnS67boTTf+9xjvychWku7lanby+OSUMPdOqZ7xv6n2tmlQTFvGFDiw1Ffv/wMTendDmKgsB2PPe8zd5IxpGJgCsg/IMNnI/0KuUUznHhBmshGem/jcfn9QQqkLG3MuwguS6PPUOZIaWtqih6ne3LU3SW2p+CWlis68xleANTTNZ5lh6yPmW/sd9Wo+09p4y4qzueVukteDVzIt2lgohnjuleC5bN/iYe07z0lAY6C0HjWpaeW0ZPds7o1nAgz7eRZ+Pn25yFVcC/YMm1SW7WApQZgRjoiC3toDMhtY0KUkvOFr/HHRe9vrhgTJIQu2MV6LjbphauOrjgXDx//79XQneHf5HH8iuB9oMLki1vo5bCQCphavQ5fwq8mNJysPHmUyh2zx25q11PDu0IcJznbvcuszZ4y3B5G0ZgkN9uFBStFqgNQXCgs2DL98hfuqrGncwo578lAY6qQEp+qgDZRssdWODr54gBV1Y4RnEGraCxvo0YsB6EkfS5cBpV/+VUT5+i1vy2yoFgekMzAN8nUZr/rKoG5wpdS6rVFs3H4Mc38PrfMwr5WjHKyhPnzessIhVB8n5SgYxr/dfOqYWlkCsjC5RMUvXKos7zOBNdymfOWO88t7xGobS1AlPIHPYm+/6WheiJD6UUgmb8hDE9R0t+Mod+ajusMWWQrFC2KwqcTqU",
+        "ec2_iam_security_credentials_EC2SSMDefault_type": "AWS-HMAC",
+        "ec2_identity_credentials_ec2_info": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:40:18Z\",\n  \"AccountId\" : \"735193432042\"\n}",
+        "ec2_identity_credentials_ec2_info_accountid": "735193432042",
+        "ec2_identity_credentials_ec2_info_code": "Success",
+        "ec2_identity_credentials_ec2_info_lastupdated": "2022-06-07T08:40:18Z",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:40:08Z\",\n  \"Type\" : \"AWS-HMAC\",\n  \"AccessKeyId\" : \"ASIA2WLHRP7VJZ5KOPO2\",\n  \"SecretAccessKey\" : \"iX8D+JGlO0zWvSRTSoh88pQY4dhYcYWKePQWwET3\",\n  \"Token\" : \"IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQDY2QHsT0hq5Ol9RnYhhR8UL/QI2MY4hPgE0HSChD5/uQIgGZFpHg2BNxSZYPYO6kfhxl9n7FqcjvJfFGN4+pf5MtEqsQQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDBBPI1atQfymGrxFiiqFBLar0HHjJIECTvFWFS2JFnPd/f776R9ooBWIVnBuZaXzWSh9/FKpI78cDy2L8nA6q0jtdTm+NpdkFKHUvgfwNoQlCmU530hWGkZMtoTIOy1BTvi0xs0e/LyACIPyWb56q/YjOKzRqWw+hxjcJ23Loiwd1buuKw3HHWYf33w++PMUaOJi7nmW3C7SNdXbaHColB2lB1RH2CkYI3yG7FBraA6VYenJHCga5oI216LvvBnUkoIGEkGYbWH/PYkBXBLFz/1SMC1f1MdFs6Qsq9ll/wfj9ByHDNX0BsoUY8gYI8DFnEWeHjZR/M+DHoxdk9XrRh5VH3ug5Ank3luGMFDACqc6XvXw/Et0K2KKeYasFrPSK1JOeW6Awa99fo6EtrFyIjVo3vciSNbXfZiwvs29KLl+mgDP1Ki4H/UYs90ogJMtCG/i/pjyD3xzqGWXY2VXc1nAmCdmSUVxRwN48ya+lpL3UtxKFekahTD6lBUNmsTxfHVLZIqH+Q3xfynYuX7TjrFcSwMbsCtfWUcfsaohz87ge0WnLHbYmjR+NVt4N2mLgTxc9CONS3pit+AS1nnzkZRmDvbMuLIhEx5B9pAFOPTXfXvtWCHSdjZUojRCp4hzwfKQGKhwYCVNaAXd5kfajk2nONEnB+3lbqe66fzqOo1RGg5X/R1X2S7oBC2Gz0IQpJJnkXMwo578lAY6jwKTvBGezw9jfR1zCBSA55rmbDZYkMYz48zVxyQYVbqJ76TfCvgR3TQNUbYzJfdpDYjyVZU0/3kb+EdIb7uhxcD9BPH5jhMxtX7ClRV35ETPNiNQnoRCuvgdpeLhO6KMapo8zYfqGzraEjgKevRjGrG30ow1idYc2xw0TlbBovMS5DpuHF2bVmrAK2WA2vdkGkP5XLDVTusyG5SNVSXvjZ5J5fve9vaKosv6hnFShk4q72fxyZjFOYfwdQcka+pRII1cRcvPbp4vw3y1Y+5scJc4yBWsY2o46Wob4Y1j6YG9hdOL9hKt18kCx7wgG9Le5OsP9kFdboVVMggnqcNK12KOaoUDUfG/R7HedRGty9So\",\n  \"Expiration\" : \"2022-06-07T14:46:25Z\"\n}",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_accesskeyid": "ASIA2WLHRP7VJZ5KOPO2",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_code": "Success",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_expiration": "2022-06-07T14:46:25Z",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_lastupdated": "2022-06-07T08:40:08Z",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_secretaccesskey": "iX8D+JGlO0zWvSRTSoh88pQY4dhYcYWKePQWwET3",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_token": "IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQDY2QHsT0hq5Ol9RnYhhR8UL/QI2MY4hPgE0HSChD5/uQIgGZFpHg2BNxSZYPYO6kfhxl9n7FqcjvJfFGN4+pf5MtEqsQQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDBBPI1atQfymGrxFiiqFBLar0HHjJIECTvFWFS2JFnPd/f776R9ooBWIVnBuZaXzWSh9/FKpI78cDy2L8nA6q0jtdTm+NpdkFKHUvgfwNoQlCmU530hWGkZMtoTIOy1BTvi0xs0e/LyACIPyWb56q/YjOKzRqWw+hxjcJ23Loiwd1buuKw3HHWYf33w++PMUaOJi7nmW3C7SNdXbaHColB2lB1RH2CkYI3yG7FBraA6VYenJHCga5oI216LvvBnUkoIGEkGYbWH/PYkBXBLFz/1SMC1f1MdFs6Qsq9ll/wfj9ByHDNX0BsoUY8gYI8DFnEWeHjZR/M+DHoxdk9XrRh5VH3ug5Ank3luGMFDACqc6XvXw/Et0K2KKeYasFrPSK1JOeW6Awa99fo6EtrFyIjVo3vciSNbXfZiwvs29KLl+mgDP1Ki4H/UYs90ogJMtCG/i/pjyD3xzqGWXY2VXc1nAmCdmSUVxRwN48ya+lpL3UtxKFekahTD6lBUNmsTxfHVLZIqH+Q3xfynYuX7TjrFcSwMbsCtfWUcfsaohz87ge0WnLHbYmjR+NVt4N2mLgTxc9CONS3pit+AS1nnzkZRmDvbMuLIhEx5B9pAFOPTXfXvtWCHSdjZUojRCp4hzwfKQGKhwYCVNaAXd5kfajk2nONEnB+3lbqe66fzqOo1RGg5X/R1X2S7oBC2Gz0IQpJJnkXMwo578lAY6jwKTvBGezw9jfR1zCBSA55rmbDZYkMYz48zVxyQYVbqJ76TfCvgR3TQNUbYzJfdpDYjyVZU0/3kb+EdIb7uhxcD9BPH5jhMxtX7ClRV35ETPNiNQnoRCuvgdpeLhO6KMapo8zYfqGzraEjgKevRjGrG30ow1idYc2xw0TlbBovMS5DpuHF2bVmrAK2WA2vdkGkP5XLDVTusyG5SNVSXvjZ5J5fve9vaKosv6hnFShk4q72fxyZjFOYfwdQcka+pRII1cRcvPbp4vw3y1Y+5scJc4yBWsY2o46Wob4Y1j6YG9hdOL9hKt18kCx7wgG9Le5OsP9kFdboVVMggnqcNK12KOaoUDUfG/R7HedRGty9So",
+        "ec2_identity_credentials_ec2_security_credentials_ec2_instance_type": "AWS-HMAC",
+        "ec2_instance_action": "none",
+        "ec2_instance_id": "i-05d3c2f715fccc145",
+        "ec2_instance_identity_document": "{\n  \"accountId\" : \"735193432042\",\n  \"architecture\" : \"x86_64\",\n  \"availabilityZone\" : \"us-east-1c\",\n  \"billingProducts\" : [ \"bp-6fa54006\" ],\n  \"devpayProductCodes\" : null,\n  \"marketplaceProductCodes\" : null,\n  \"imageId\" : \"ami-019599717e2dd5baa\",\n  \"instanceId\" : \"i-05d3c2f715fccc145\",\n  \"instanceType\" : \"m6i.large\",\n  \"kernelId\" : null,\n  \"pendingTime\" : \"2022-05-17T14:29:26Z\",\n  \"privateIp\" : \"10.17.65.244\",\n  \"ramdiskId\" : null,\n  \"region\" : \"us-east-1\",\n  \"version\" : \"2017-09-30\"\n}",
+        "ec2_instance_identity_document_accountid": "735193432042",
+        "ec2_instance_identity_document_architecture": "x86_64",
+        "ec2_instance_identity_document_availabilityzone": "us-east-1c",
+        "ec2_instance_identity_document_billingproducts": [
+            "bp-6fa54006"
+        ],
+        "ec2_instance_identity_document_devpayproductcodes": null,
+        "ec2_instance_identity_document_imageid": "ami-019599717e2dd5baa",
+        "ec2_instance_identity_document_instanceid": "i-05d3c2f715fccc145",
+        "ec2_instance_identity_document_instancetype": "m6i.large",
+        "ec2_instance_identity_document_kernelid": null,
+        "ec2_instance_identity_document_marketplaceproductcodes": null,
+        "ec2_instance_identity_document_pendingtime": "2022-05-17T14:29:26Z",
+        "ec2_instance_identity_document_privateip": "10.17.65.244",
+        "ec2_instance_identity_document_ramdiskid": null,
+        "ec2_instance_identity_document_region": "us-east-1",
+        "ec2_instance_identity_document_version": "2017-09-30",
+        "ec2_instance_identity_pkcs7": "MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAaCAJIAEggHqewog\nICJhY2NvdW50SWQiIDogIjczNTE5MzQzMjA0MiIsCiAgImFyY2hpdGVjdHVyZSIgOiAieDg2XzY0\nIiwKICAiYXZhaWxhYmlsaXR5Wm9uZSIgOiAidXMtZWFzdC0xYyIsCiAgImJpbGxpbmdQcm9kdWN0\ncyIgOiBbICJicC02ZmE1NDAwNiIgXSwKICAiZGV2cGF5UHJvZHVjdENvZGVzIiA6IG51bGwsCiAg\nIm1hcmtldHBsYWNlUHJvZHVjdENvZGVzIiA6IG51bGwsCiAgImltYWdlSWQiIDogImFtaS0wMTk1\nOTk3MTdlMmRkNWJhYSIsCiAgImluc3RhbmNlSWQiIDogImktMDVkM2MyZjcxNWZjY2MxNDUiLAog\nICJpbnN0YW5jZVR5cGUiIDogIm02aS5sYXJnZSIsCiAgImtlcm5lbElkIiA6IG51bGwsCiAgInBl\nbmRpbmdUaW1lIiA6ICIyMDIyLTA1LTE3VDE0OjI5OjI2WiIsCiAgInByaXZhdGVJcCIgOiAiMTAu\nMTcuNjUuMjQ0IiwKICAicmFtZGlza0lkIiA6IG51bGwsCiAgInJlZ2lvbiIgOiAidXMtZWFzdC0x\nIiwKICAidmVyc2lvbiIgOiAiMjAxNy0wOS0zMCIKfQAAAAAAADGCAUAwggE8AgEBMGkwXDELMAkG\nA1UEBhMCVVMxGTAXBgNVBAgTEFdhc2hpbmd0b24gU3RhdGUxEDAOBgNVBAcTB1NlYXR0bGUxIDAe\nBgNVBAoTF0FtYXpvbiBXZWIgU2VydmljZXMgTExDAgkAlrpI2eVeGmcwCQYFKw4DAhoFAKCBhDAY\nBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA1MTcxNDI5MjdaMCMG\nCSqGSIb3DQEJBDEWBBSd9mpnT8yxQLzAXd57VLdRtYe24TAlBgkqhkiG9w0BCTQxGDAWMAkGBSsO\nAwIaBQChCQYHKoZIzjgEAzAJBgcqhkjOOAQDBC8wLQIUAqRED0JGgVBiQw3NruDL47hyelUCFQCc\nj5CgI/qvqpaI5dU8kAkWNM9mowAAAAAAAA==",
+        "ec2_instance_identity_rsa2048": "MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwGggCSABIIB\n6nsKICAiYWNjb3VudElkIiA6ICI3MzUxOTM0MzIwNDIiLAogICJhcmNoaXRlY3R1cmUiIDogIng4\nNl82NCIsCiAgImF2YWlsYWJpbGl0eVpvbmUiIDogInVzLWVhc3QtMWMiLAogICJiaWxsaW5nUHJv\nZHVjdHMiIDogWyAiYnAtNmZhNTQwMDYiIF0sCiAgImRldnBheVByb2R1Y3RDb2RlcyIgOiBudWxs\nLAogICJtYXJrZXRwbGFjZVByb2R1Y3RDb2RlcyIgOiBudWxsLAogICJpbWFnZUlkIiA6ICJhbWkt\nMDE5NTk5NzE3ZTJkZDViYWEiLAogICJpbnN0YW5jZUlkIiA6ICJpLTA1ZDNjMmY3MTVmY2NjMTQ1\nIiwKICAiaW5zdGFuY2VUeXBlIiA6ICJtNmkubGFyZ2UiLAogICJrZXJuZWxJZCIgOiBudWxsLAog\nICJwZW5kaW5nVGltZSIgOiAiMjAyMi0wNS0xN1QxNDoyOToyNloiLAogICJwcml2YXRlSXAiIDog\nIjEwLjE3LjY1LjI0NCIsCiAgInJhbWRpc2tJZCIgOiBudWxsLAogICJyZWdpb24iIDogInVzLWVh\nc3QtMSIsCiAgInZlcnNpb24iIDogIjIwMTctMDktMzAiCn0AAAAAAAAxggIvMIICKwIBATBpMFwx\nCzAJBgNVBAYTAlVTMRkwFwYDVQQIExBXYXNoaW5ndG9uIFN0YXRlMRAwDgYDVQQHEwdTZWF0dGxl\nMSAwHgYDVQQKExdBbWF6b24gV2ViIFNlcnZpY2VzIExMQwIJALFpzEAVWaQZMA0GCWCGSAFlAwQC\nAQUAoIGYMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIyMDUxNzE0\nMjkyN1owLQYJKoZIhvcNAQk0MSAwHjANBglghkgBZQMEAgEFAKENBgkqhkiG9w0BAQsFADAvBgkq\nhkiG9w0BCQQxIgQg04NstDe+ryQE6c2L8HHJvVZ6YoEKmHG8ts+KsML1k1EwDQYJKoZIhvcNAQEL\nBQAEggEAKXlJHC7kIAFT7tBLiKfTqt1KeTZBHqFKcXMSAWxBWCnQxYkS1JWNL/h0F0n7uxQPi3r6\nvRNARjHXQZS7ZI1+wxDSvmR05O/1AKfFCS5WaOSa05VtNisoD6DQ+Thw/mdIqaUgEqUejrv38r5U\nLmfQ/3v/SSycswcmUbQyJRxeFtiCBjhfWXxCxjWPafkJM+66oSVIFMhXsTlSVWGK7h2wlRT+FYn8\nm3GBJWrHmhrM0cHxU9fbRO5tPiP3cprF3LozWiOcd+42/EYnOUd1OB/Kq/nXuR5AOPClZZpN4cmh\neSYrL7RM8WqLoIujWGXfxpli8lehenyEnZwy4oLeRhEKFAAAAAAAAA==",
+        "ec2_instance_identity_signature": "eYimFkWvIUaJp6lhLlcc9nTcQRzXWU50i8yvyNTtxHrfNI+qmI2S7mjte+byAB47JxAnrPN6KFeD\nmKuaGjJcsjyKvcohXpZ1qxoZx/O9SmH4wvfEBaeOQrcKCwlG460PzdNq8iiWQkQTkPyxBfMebms1\noD2jyyepWQMbRdNkb64=",
+        "ec2_instance_life_cycle": "on-demand",
+        "ec2_instance_type": "m6i.large",
+        "ec2_local_hostname": "ip-10-17-65-244.ec2.internal",
+        "ec2_local_ipv4": "10.17.65.244",
+        "ec2_mac": "02:11:9e:fa:cb:d9",
+        "ec2_metrics_vhostmd": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_device_number": "0",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_interface_id": "eni-0f4d48334ee3c93ed",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_local_hostname": "ip-10-17-65-244.ec2.internal",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_local_ipv4s": "10.17.65.244",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_mac": "02:11:9e:fa:cb:d9",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_owner_id": "735193432042",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_security_group_ids": "sg-01b3ffe9096a4938b,sg-0f74b4a572605ec81",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_security_groups": "ansible-test-pr,infra-shared-services-app-linux",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_subnet_id": "subnet-06d98da3bcd120488",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_subnet_ipv4_cidr_block": "10.17.65.0/24",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_vpc_id": "vpc-0cdaa657714238d9e",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_vpc_ipv4_cidr_block": "10.17.64.0/22",
+        "ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_vpc_ipv4_cidr_blocks": "10.17.64.0/22",
+        "ec2_placement_availability_zone": "us-east-1c",
+        "ec2_placement_availability_zone_id": "use1-az1",
+        "ec2_placement_region": "us-east-1",
+        "ec2_profile": "default-hvm",
+        "ec2_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWojP11qfNMTEmIfKQamcb4kt9jECTISWbtr+0dmKygcmCgRCrl95+DFCe5ZonwzoxiwVQCyJJWOszT1Wzgrd2HphAEDJTDGH4zl+dvHJpkJEMN2yp9iv7QMjg1MzLzJ3XIXC6NJHPE24dC3KbBTGzlFl7hlJjH5gISK6R4bXxbAFQ9SHSnhvvqmS+PMw4JvBzIuIGnt9urEpejymQanToFpzGZ+sa4o1diNcg/JJA/QhV1MHqEFqtm6bsHU0o6MQ0KKUKZJrbfYSv1ao/HdyNibzm/otnjB/a2eY2RMHiWNf6WxNe0pQus3ZZNjvchrIMnOTgGEN8AOcPwTVxi/c/ ansible-key\n",
+        "ec2_reservation_id": "r-0edf4f04701ec6f3f",
+        "ec2_security_groups": "ansible-test-pr,infra-shared-services-app-linux",
+        "ec2_services_domain": "amazonaws.com",
+        "ec2_services_partition": "aws",
+        "ec2_user_data": "None",
+        "effective_group_id": 0,
+        "effective_user_id": 0,
+        "env": {
+            "HOME": "/root",
+            "LANG": "en_US.UTF-8",
+            "LOGNAME": "root",
+            "LS_COLORS": "rs=0:di=38;5;33:ln=38;5;51:mh=00:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=01;05;37;41:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;40:*.tar=38;5;9:*.tgz=38;5;9:*.arc=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lha=38;5;9:*.lz4=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.tzo=38;5;9:*.t7z=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lrz=38;5;9:*.lz=38;5;9:*.lzo=38;5;9:*.xz=38;5;9:*.zst=38;5;9:*.tzst=38;5;9:*.bz2=38;5;9:*.bz=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.war=38;5;9:*.ear=38;5;9:*.sar=38;5;9:*.rar=38;5;9:*.alz=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.cab=38;5;9:*.wim=38;5;9:*.swm=38;5;9:*.dwm=38;5;9:*.esd=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.mjpg=38;5;13:*.mjpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.webm=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.m4a=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.oga=38;5;45:*.opus=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:",
+            "MAIL": "/var/mail/root",
+            "PATH": "/sbin:/bin:/usr/sbin:/usr/bin",
+            "PWD": "/home/ec2-user",
+            "SHELL": "/bin/bash",
+            "SHLVL": "1",
+            "SUDO_COMMAND": "/bin/sh -c echo BECOME-SUCCESS-diipjyyjuscbbuklqkarcquwftgyzurn ; /usr/libexec/platform-python /home/ec2-user/.ansible/tmp/ansible-tmp-1654591508.385945-369266-122550773287942/AnsiballZ_setup.py",
+            "SUDO_GID": "1000",
+            "SUDO_UID": "1000",
+            "SUDO_USER": "ec2-user",
+            "TERM": "xterm-256color",
+            "USER": "root",
+            "_": "/usr/libexec/platform-python"
+        },
+        "eth0": {
+            "active": true,
+            "device": "eth0",
+            "features": {
+                "esp_hw_offload": "off [fixed]",
+                "esp_tx_csum_hw_offload": "off [fixed]",
+                "fcoe_mtu": "off [fixed]",
+                "generic_receive_offload": "on",
+                "generic_segmentation_offload": "on",
+                "highdma": "on",
+                "hw_tc_offload": "off [fixed]",
+                "l2_fwd_offload": "off [fixed]",
+                "large_receive_offload": "off [fixed]",
+                "loopback": "off [fixed]",
+                "netns_local": "off [fixed]",
+                "ntuple_filters": "off [fixed]",
+                "receive_hashing": "on",
+                "rx_all": "off [fixed]",
+                "rx_checksumming": "on",
+                "rx_fcs": "off [fixed]",
+                "rx_gro_hw": "off [fixed]",
+                "rx_gro_list": "off",
+                "rx_udp_gro_forwarding": "off",
+                "rx_udp_tunnel_port_offload": "off [fixed]",
+                "rx_vlan_filter": "off [fixed]",
+                "rx_vlan_offload": "off [fixed]",
+                "rx_vlan_stag_filter": "off [fixed]",
+                "rx_vlan_stag_hw_parse": "off [fixed]",
+                "scatter_gather": "on",
+                "tcp_segmentation_offload": "off",
+                "tls_hw_record": "off [fixed]",
+                "tls_hw_rx_offload": "off [fixed]",
+                "tls_hw_tx_offload": "off [fixed]",
+                "tx_checksum_fcoe_crc": "off [fixed]",
+                "tx_checksum_ip_generic": "off [fixed]",
+                "tx_checksum_ipv4": "on",
+                "tx_checksum_ipv6": "off [fixed]",
+                "tx_checksum_sctp": "off [fixed]",
+                "tx_checksumming": "on",
+                "tx_esp_segmentation": "off [fixed]",
+                "tx_fcoe_segmentation": "off [fixed]",
+                "tx_gre_csum_segmentation": "off [fixed]",
+                "tx_gre_segmentation": "off [fixed]",
+                "tx_gso_list": "off [fixed]",
+                "tx_gso_partial": "off [fixed]",
+                "tx_gso_robust": "off [fixed]",
+                "tx_ipxip4_segmentation": "off [fixed]",
+                "tx_ipxip6_segmentation": "off [fixed]",
+                "tx_lockless": "off [fixed]",
+                "tx_nocache_copy": "off",
+                "tx_scatter_gather": "on",
+                "tx_scatter_gather_fraglist": "off [fixed]",
+                "tx_sctp_segmentation": "off [fixed]",
+                "tx_tcp6_segmentation": "off [fixed]",
+                "tx_tcp_ecn_segmentation": "off [fixed]",
+                "tx_tcp_mangleid_segmentation": "off [fixed]",
+                "tx_tcp_segmentation": "off [fixed]",
+                "tx_tunnel_remcsum_segmentation": "off [fixed]",
+                "tx_udp_segmentation": "off [fixed]",
+                "tx_udp_tnl_csum_segmentation": "off [fixed]",
+                "tx_udp_tnl_segmentation": "off [fixed]",
+                "tx_vlan_offload": "off [fixed]",
+                "tx_vlan_stag_hw_insert": "off [fixed]",
+                "vlan_challenged": "off [fixed]"
+            },
+            "hw_timestamp_filters": [],
+            "ipv4": {
+                "address": "10.17.65.244",
+                "broadcast": "10.17.65.255",
+                "netmask": "255.255.255.0",
+                "network": "10.17.65.0"
+            },
+            "ipv6": [
+                {
+                    "address": "fe80::11:9eff:fefa:cbd9",
+                    "prefix": "64",
+                    "scope": "link"
+                }
+            ],
+            "macaddress": "02:11:9e:fa:cb:d9",
+            "module": "ena",
+            "mtu": 9001,
+            "pciid": "0000:00:05.0",
+            "promisc": false,
+            "timestamping": [],
+            "type": "ether"
+        },
+        "fibre_channel_wwn": [],
+        "fips": false,
+        "form_factor": "Other",
+        "fqdn": "ip-10-17-65-244.ec2.internal",
+        "gather_subset": [
+            "all"
+        ],
+        "hostname": "ip-10-17-65-244",
+        "hostnqn": "",
+        "interfaces": [
+            "eth0",
+            "lo"
+        ],
+        "is_chroot": false,
+        "iscsi_iqn": "",
+        "kernel": "4.18.0-348.12.2.el8_5.x86_64",
+        "kernel_version": "#1 SMP Mon Jan 17 07:06:06 EST 2022",
+        "lo": {
+            "active": true,
+            "device": "lo",
+            "features": {
+                "esp_hw_offload": "off [fixed]",
+                "esp_tx_csum_hw_offload": "off [fixed]",
+                "fcoe_mtu": "off [fixed]",
+                "generic_receive_offload": "on",
+                "generic_segmentation_offload": "on",
+                "highdma": "on [fixed]",
+                "hw_tc_offload": "off [fixed]",
+                "l2_fwd_offload": "off [fixed]",
+                "large_receive_offload": "off [fixed]",
+                "loopback": "on [fixed]",
+                "netns_local": "on [fixed]",
+                "ntuple_filters": "off [fixed]",
+                "receive_hashing": "off [fixed]",
+                "rx_all": "off [fixed]",
+                "rx_checksumming": "on [fixed]",
+                "rx_fcs": "off [fixed]",
+                "rx_gro_hw": "off [fixed]",
+                "rx_gro_list": "off",
+                "rx_udp_gro_forwarding": "off",
+                "rx_udp_tunnel_port_offload": "off [fixed]",
+                "rx_vlan_filter": "off [fixed]",
+                "rx_vlan_offload": "off [fixed]",
+                "rx_vlan_stag_filter": "off [fixed]",
+                "rx_vlan_stag_hw_parse": "off [fixed]",
+                "scatter_gather": "on",
+                "tcp_segmentation_offload": "on",
+                "tls_hw_record": "off [fixed]",
+                "tls_hw_rx_offload": "off [fixed]",
+                "tls_hw_tx_offload": "off [fixed]",
+                "tx_checksum_fcoe_crc": "off [fixed]",
+                "tx_checksum_ip_generic": "on [fixed]",
+                "tx_checksum_ipv4": "off [fixed]",
+                "tx_checksum_ipv6": "off [fixed]",
+                "tx_checksum_sctp": "on [fixed]",
+                "tx_checksumming": "on",
+                "tx_esp_segmentation": "off [fixed]",
+                "tx_fcoe_segmentation": "off [fixed]",
+                "tx_gre_csum_segmentation": "off [fixed]",
+                "tx_gre_segmentation": "off [fixed]",
+                "tx_gso_list": "on",
+                "tx_gso_partial": "off [fixed]",
+                "tx_gso_robust": "off [fixed]",
+                "tx_ipxip4_segmentation": "off [fixed]",
+                "tx_ipxip6_segmentation": "off [fixed]",
+                "tx_lockless": "on [fixed]",
+                "tx_nocache_copy": "off [fixed]",
+                "tx_scatter_gather": "on [fixed]",
+                "tx_scatter_gather_fraglist": "on [fixed]",
+                "tx_sctp_segmentation": "on",
+                "tx_tcp6_segmentation": "on",
+                "tx_tcp_ecn_segmentation": "on",
+                "tx_tcp_mangleid_segmentation": "on",
+                "tx_tcp_segmentation": "on",
+                "tx_tunnel_remcsum_segmentation": "off [fixed]",
+                "tx_udp_segmentation": "on",
+                "tx_udp_tnl_csum_segmentation": "off [fixed]",
+                "tx_udp_tnl_segmentation": "off [fixed]",
+                "tx_vlan_offload": "off [fixed]",
+                "tx_vlan_stag_hw_insert": "off [fixed]",
+                "vlan_challenged": "on [fixed]"
+            },
+            "hw_timestamp_filters": [],
+            "ipv4": {
+                "address": "127.0.0.1",
+                "broadcast": "",
+                "netmask": "255.0.0.0",
+                "network": "127.0.0.0"
+            },
+            "ipv6": [
+                {
+                    "address": "::1",
+                    "prefix": "128",
+                    "scope": "host"
+                }
+            ],
+            "mtu": 65536,
+            "promisc": false,
+            "timestamping": [],
+            "type": "loopback"
+        },
+        "lsb": {},
+        "machine": "x86_64",
+        "machine_id": "ec28d2d9d475eb373bd6b769805dac56",
+        "memfree_mb": 3825,
+        "memory_mb": {
+            "nocache": {
+                "free": 6376,
+                "used": 1250
+            },
+            "real": {
+                "free": 3825,
+                "total": 7626,
+                "used": 3801
+            },
+            "swap": {
+                "cached": 0,
+                "free": 0,
+                "total": 0,
+                "used": 0
+            }
+        },
+        "memtotal_mb": 7626,
+        "module_setup": true,
+        "mounts": [
+            {
+                "block_available": 1585154,
+                "block_size": 4096,
+                "block_total": 2618355,
+                "block_used": 1033201,
+                "device": "/dev/nvme0n1p2",
+                "fstype": "xfs",
+                "inode_available": 5193164,
+                "inode_total": 5241792,
+                "inode_used": 48628,
+                "mount": "/",
+                "options": "rw,seclabel,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota",
+                "size_available": 6492790784,
+                "size_total": 10724782080,
+                "uuid": "ea34d7b4-bd16-43bd-8a0c-c534a23a591a"
+            }
+        ],
+        "nodename": "ip-10-17-65-244.ec2.internal",
+        "os_family": "RedHat",
+        "pkg_mgr": "dnf",
+        "proc_cmdline": {
+            "BOOT_IMAGE": "(hd0,gpt2)/boot/vmlinuz-4.18.0-348.12.2.el8_5.x86_64",
+            "console": [
+                "ttyS0,115200n8",
+                "tty0"
+            ],
+            "crashkernel": "auto",
+            "net.ifnames": "0",
+            "nvme_core.io_timeout": "4294967295",
+            "rd.blacklist": "nouveau",
+            "root": "UUID=ea34d7b4-bd16-43bd-8a0c-c534a23a591a"
+        },
+        "processor": [
+            "0",
+            "GenuineIntel",
+            "Intel(R) Xeon(R) Platinum 8375C CPU @ 2.90GHz",
+            "1",
+            "GenuineIntel",
+            "Intel(R) Xeon(R) Platinum 8375C CPU @ 2.90GHz"
+        ],
+        "processor_cores": 1,
+        "processor_count": 1,
+        "processor_nproc": 2,
+        "processor_threads_per_core": 2,
+        "processor_vcpus": 2,
+        "product_name": "m6i.large",
+        "product_serial": "ec28d2d9-d475-eb37-3bd6-b769805dac56",
+        "product_uuid": "ec28d2d9-d475-eb37-3bd6-b769805dac56",
+        "product_version": "NA",
+        "python": {
+            "executable": "/usr/libexec/platform-python",
+            "has_sslcontext": true,
+            "type": "cpython",
+            "version": {
+                "major": 3,
+                "micro": 8,
+                "minor": 6,
+                "releaselevel": "final",
+                "serial": 0
+            },
+            "version_info": [
+                3,
+                6,
+                8,
+                "final",
+                0
+            ]
+        },
+        "python_version": "3.6.8",
+        "real_group_id": 0,
+        "real_user_id": 0,
+        "selinux": {
+            "config_mode": "enforcing",
+            "mode": "enforcing",
+            "policyvers": 33,
+            "status": "enabled",
+            "type": "targeted"
+        },
+        "selinux_python_present": true,
+        "service_mgr": "systemd",
+        "ssh_host_key_ecdsa_public": "AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBLHVqWm9kyJ+XKX/3U+VZ+QDMfPActbfLk/UqxD0FenStqqnfbRLDm2So6xvpMBtsIC7s2CeODnsXGlmhmXfTwA=",
+        "ssh_host_key_ecdsa_public_keytype": "ecdsa-sha2-nistp256",
+        "ssh_host_key_ed25519_public": "AAAAC3NzaC1lZDI1NTE5AAAAIEZ1ip0PAd9ZR0hpF5Wg5i+5WhJcYMWWM3j2kFnup3Gs",
+        "ssh_host_key_ed25519_public_keytype": "ssh-ed25519",
+        "ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABgQCeima/HY53zHhAnDRph+woK25tTo0PuDplwrGfhNAX/DO0278/YEcMV3A6ReLSLQvp7Jx8TmMYS/UNGtwwI/sOGFCDoxzbQZAdphyJ4PEqCy6UvJIPDV4LShXn5OmgOwYUn9QoQ/DFGggCeBtm6Ci2QfvkcB6IG8uakhqXDnrariFM3aXt5ckAkbz2ui2wTQxLRqjx1Y+xhjhXyN1rjwCFOxvfZD1Q1n09W2I+ruLT97JxWKrz/frZGT+v27u3vxfJWdI7sxd+hoBBkQZ52UoqGPfchD0eXBiEqCpJ06TEaMKgxCAlp0yn9m1yg/iMFnsp62OdnK5wBXDhfg/lpUR6eBvzrgLPLK61On3vs4v8rdjfkgHpw+4Mh0NrLQ+u+JhgIphbDISzQgIP2GT2txLTH5dOBlcHEhmpDunbUjPxNXpPmhHFXvocQcDo7pKnQeJd413SXRAn4SS0vcp1K5VuJENH4kSjIQ2dcEE3zuE9lStxY7f6DMUeASwMuLkM8FE=",
+        "ssh_host_key_rsa_public_keytype": "ssh-rsa",
+        "swapfree_mb": 0,
+        "swaptotal_mb": 0,
+        "system": "Linux",
+        "system_capabilities": [
+            "cap_chown",
+            "cap_dac_override",
+            "cap_dac_read_search",
+            "cap_fowner",
+            "cap_fsetid",
+            "cap_kill",
+            "cap_setgid",
+            "cap_setuid",
+            "cap_setpcap",
+            "cap_linux_immutable",
+            "cap_net_bind_service",
+            "cap_net_broadcast",
+            "cap_net_admin",
+            "cap_net_raw",
+            "cap_ipc_lock",
+            "cap_ipc_owner",
+            "cap_sys_module",
+            "cap_sys_rawio",
+            "cap_sys_chroot",
+            "cap_sys_ptrace",
+            "cap_sys_pacct",
+            "cap_sys_admin",
+            "cap_sys_boot",
+            "cap_sys_nice",
+            "cap_sys_resource",
+            "cap_sys_time",
+            "cap_sys_tty_config",
+            "cap_mknod",
+            "cap_lease",
+            "cap_audit_write",
+            "cap_audit_control",
+            "cap_setfcap",
+            "cap_mac_override",
+            "cap_mac_admin",
+            "cap_syslog",
+            "cap_wake_alarm",
+            "cap_block_suspend",
+            "cap_audit_read",
+            "cap_perfmon",
+            "cap_bpf",
+            "cap_checkpoint_restore+ep"
+        ],
+        "system_capabilities_enforced": "True",
+        "system_vendor": "Amazon EC2",
+        "uptime_seconds": 1793729,
+        "user_dir": "/root",
+        "user_gecos": "root",
+        "user_gid": 0,
+        "user_id": "root",
+        "user_shell": "/bin/bash",
+        "user_uid": 0,
+        "userspace_architecture": "x86_64",
+        "userspace_bits": "64",
+        "virtualization_role": "guest",
+        "virtualization_tech_guest": [
+            "kvm"
+        ],
+        "virtualization_tech_host": [],
+        "virtualization_type": "kvm"
+    }
+}
+
+TASK [Print ec2_tags variable] *************************************************
+ok: [10.17.65.244] => {
+    "ec2_tags": {
+        "changed": false,
+        "failed": false,
+        "tags": {
+            "AmiVendor": "James Phillips",
+            "Automation": "Terraform",
+            "AutomationKey": "solution-ansible-master",
+            "BackupPolicyOS": "Linux",
+            "BusinessServiceName": "Ansible",
+            "CipherTrustManagement": "present",
+            "Environment": "PR",
+            "GlobalDNS": "ansible-shyam-test-pr-1.apissa.us-east-1.aws.alight.com",
+            "Hostname": "ansible-shyam-test-pr-1e",
+            "Name": "ansible-shyam-test-pr-1",
+            "PatchAZ": "MVA",
+            "Platform": "Linux",
+            "RegionalDNS": "ansible-shyam-test-pr-1.apissa.aws.alight.com"
+        }
+    }
+}
+
+TASK [Print ec2_instance variable] *********************************************
+ok: [10.17.65.244] => {
+    "ec2_instance": {
+        "ansible_facts": {
+            "ansible_ec2_ami_id": "ami-019599717e2dd5baa",
+            "ansible_ec2_ami_launch_index": "0",
+            "ansible_ec2_ami_manifest_path": "(unknown)",
+            "ansible_ec2_block_device_mapping_ami": "sda1",
+            "ansible_ec2_block_device_mapping_root": "/dev/sda1",
+            "ansible_ec2_events_maintenance_history": "[]",
+            "ansible_ec2_events_maintenance_scheduled": "[]",
+            "ansible_ec2_fws_instance_monitoring": "enabled",
+            "ansible_ec2_hibernation_configured": "false",
+            "ansible_ec2_hostname": "ip-10-17-65-244.ec2.internal",
+            "ansible_ec2_iam_info": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:41:07Z\",\n  \"InstanceProfileArn\" : \"arn:aws:iam::735193432042:instance-profile/EC2SSMDefault\",\n  \"InstanceProfileId\" : \"AIPA2WLHRP7VGWYLN6ZPS\"\n}",
+            "ansible_ec2_iam_info_code": "Success",
+            "ansible_ec2_iam_info_instanceprofilearn": "arn:aws:iam::735193432042:instance-profile/EC2SSMDefault",
+            "ansible_ec2_iam_info_instanceprofileid": "AIPA2WLHRP7VGWYLN6ZPS",
+            "ansible_ec2_iam_info_lastupdated": "2022-06-07T08:41:07Z",
+            "ansible_ec2_iam_instance_profile_role": "EC2SSMDefault",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:41:20Z\",\n  \"Type\" : \"AWS-HMAC\",\n  \"AccessKeyId\" : \"ASIA2WLHRP7VKU4X3WTA\",\n  \"SecretAccessKey\" : \"OvYs2p9YtrCklri+LUS5xgJfkBw04WE4MmVkXMKq\",\n  \"Token\" : \"IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQCkKwWEdyl4kcGi/JSmuGKRKAtHdoeoR/urGS2KiND1uwIgIByPEqDfxA0g16MK4QKm5lbd72pRwaTtRosItW5nrKoq2wQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDOpAPmeZSchqilUgPSqvBI9mGv2S9VyQ/tNRIkgyxnUNjsVYQ5pgzH5caFz6upIJXFjh0mwfgXFtxM1jwM25vTudhem6gpbvBfhqgNWRi/Pj0lrXa4ULdc5B1kwMr9N9zZOist5FjJkwR/dP2ePsyTXMMgulw9cExvIJhFfILvsMlkDPt9e+b8C2DzuUI3nz4C5DUHhJM+hafIsCZkCsCUhSoVE0ZlykLhEisim5L32S2WQE0PtmfjfUR4mrb/MedYzbp0/Ax1QCongzxUE0PrKrOnF9ezc4O8W4eiOHaU99WOXFuQ6r6OgqGXzKAnS67boTTf+9xjvychWku7lanby+OSUMPdOqZ7xv6n2tmlQTFvGFDiw1Ffv/wMTendDmKgsB2PPe8zd5IxpGJgCsg/IMNnI/0KuUUznHhBmshGem/jcfn9QQqkLG3MuwguS6PPUOZIaWtqih6ne3LU3SW2p+CWlis68xleANTTNZ5lh6yPmW/sd9Wo+09p4y4qzueVukteDVzIt2lgohnjuleC5bN/iYe07z0lAY6C0HjWpaeW0ZPds7o1nAgz7eRZ+Pn25yFVcC/YMm1SW7WApQZgRjoiC3toDMhtY0KUkvOFr/HHRe9vrhgTJIQu2MV6LjbphauOrjgXDx//79XQneHf5HH8iuB9oMLki1vo5bCQCphavQ5fwq8mNJysPHmUyh2zx25q11PDu0IcJznbvcuszZ4y3B5G0ZgkN9uFBStFqgNQXCgs2DL98hfuqrGncwo578lAY6qQEp+qgDZRssdWODr54gBV1Y4RnEGraCxvo0YsB6EkfS5cBpV/+VUT5+i1vy2yoFgekMzAN8nUZr/rKoG5wpdS6rVFs3H4Mc38PrfMwr5WjHKyhPnzessIhVB8n5SgYxr/dfOqYWlkCsjC5RMUvXKos7zOBNdymfOWO88t7xGobS1AlPIHPYm+/6WheiJD6UUgmb8hDE9R0t+Mod+ajusMWWQrFC2KwqcTqU\",\n  \"Expiration\" : \"2022-06-07T14:51:23Z\"\n}",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_accesskeyid": "ASIA2WLHRP7VKU4X3WTA",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_code": "Success",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_expiration": "2022-06-07T14:51:23Z",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_lastupdated": "2022-06-07T08:41:20Z",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_secretaccesskey": "OvYs2p9YtrCklri+LUS5xgJfkBw04WE4MmVkXMKq",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_token": "IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQCkKwWEdyl4kcGi/JSmuGKRKAtHdoeoR/urGS2KiND1uwIgIByPEqDfxA0g16MK4QKm5lbd72pRwaTtRosItW5nrKoq2wQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDOpAPmeZSchqilUgPSqvBI9mGv2S9VyQ/tNRIkgyxnUNjsVYQ5pgzH5caFz6upIJXFjh0mwfgXFtxM1jwM25vTudhem6gpbvBfhqgNWRi/Pj0lrXa4ULdc5B1kwMr9N9zZOist5FjJkwR/dP2ePsyTXMMgulw9cExvIJhFfILvsMlkDPt9e+b8C2DzuUI3nz4C5DUHhJM+hafIsCZkCsCUhSoVE0ZlykLhEisim5L32S2WQE0PtmfjfUR4mrb/MedYzbp0/Ax1QCongzxUE0PrKrOnF9ezc4O8W4eiOHaU99WOXFuQ6r6OgqGXzKAnS67boTTf+9xjvychWku7lanby+OSUMPdOqZ7xv6n2tmlQTFvGFDiw1Ffv/wMTendDmKgsB2PPe8zd5IxpGJgCsg/IMNnI/0KuUUznHhBmshGem/jcfn9QQqkLG3MuwguS6PPUOZIaWtqih6ne3LU3SW2p+CWlis68xleANTTNZ5lh6yPmW/sd9Wo+09p4y4qzueVukteDVzIt2lgohnjuleC5bN/iYe07z0lAY6C0HjWpaeW0ZPds7o1nAgz7eRZ+Pn25yFVcC/YMm1SW7WApQZgRjoiC3toDMhtY0KUkvOFr/HHRe9vrhgTJIQu2MV6LjbphauOrjgXDx//79XQneHf5HH8iuB9oMLki1vo5bCQCphavQ5fwq8mNJysPHmUyh2zx25q11PDu0IcJznbvcuszZ4y3B5G0ZgkN9uFBStFqgNQXCgs2DL98hfuqrGncwo578lAY6qQEp+qgDZRssdWODr54gBV1Y4RnEGraCxvo0YsB6EkfS5cBpV/+VUT5+i1vy2yoFgekMzAN8nUZr/rKoG5wpdS6rVFs3H4Mc38PrfMwr5WjHKyhPnzessIhVB8n5SgYxr/dfOqYWlkCsjC5RMUvXKos7zOBNdymfOWO88t7xGobS1AlPIHPYm+/6WheiJD6UUgmb8hDE9R0t+Mod+ajusMWWQrFC2KwqcTqU",
+            "ansible_ec2_iam_security_credentials_EC2SSMDefault_type": "AWS-HMAC",
+            "ansible_ec2_identity_credentials_ec2_info": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:40:18Z\",\n  \"AccountId\" : \"735193432042\"\n}",
+            "ansible_ec2_identity_credentials_ec2_info_accountid": "735193432042",
+            "ansible_ec2_identity_credentials_ec2_info_code": "Success",
+            "ansible_ec2_identity_credentials_ec2_info_lastupdated": "2022-06-07T08:40:18Z",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance": "{\n  \"Code\" : \"Success\",\n  \"LastUpdated\" : \"2022-06-07T08:40:08Z\",\n  \"Type\" : \"AWS-HMAC\",\n  \"AccessKeyId\" : \"ASIA2WLHRP7VJZ5KOPO2\",\n  \"SecretAccessKey\" : \"iX8D+JGlO0zWvSRTSoh88pQY4dhYcYWKePQWwET3\",\n  \"Token\" : \"IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQDY2QHsT0hq5Ol9RnYhhR8UL/QI2MY4hPgE0HSChD5/uQIgGZFpHg2BNxSZYPYO6kfhxl9n7FqcjvJfFGN4+pf5MtEqsQQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDBBPI1atQfymGrxFiiqFBLar0HHjJIECTvFWFS2JFnPd/f776R9ooBWIVnBuZaXzWSh9/FKpI78cDy2L8nA6q0jtdTm+NpdkFKHUvgfwNoQlCmU530hWGkZMtoTIOy1BTvi0xs0e/LyACIPyWb56q/YjOKzRqWw+hxjcJ23Loiwd1buuKw3HHWYf33w++PMUaOJi7nmW3C7SNdXbaHColB2lB1RH2CkYI3yG7FBraA6VYenJHCga5oI216LvvBnUkoIGEkGYbWH/PYkBXBLFz/1SMC1f1MdFs6Qsq9ll/wfj9ByHDNX0BsoUY8gYI8DFnEWeHjZR/M+DHoxdk9XrRh5VH3ug5Ank3luGMFDACqc6XvXw/Et0K2KKeYasFrPSK1JOeW6Awa99fo6EtrFyIjVo3vciSNbXfZiwvs29KLl+mgDP1Ki4H/UYs90ogJMtCG/i/pjyD3xzqGWXY2VXc1nAmCdmSUVxRwN48ya+lpL3UtxKFekahTD6lBUNmsTxfHVLZIqH+Q3xfynYuX7TjrFcSwMbsCtfWUcfsaohz87ge0WnLHbYmjR+NVt4N2mLgTxc9CONS3pit+AS1nnzkZRmDvbMuLIhEx5B9pAFOPTXfXvtWCHSdjZUojRCp4hzwfKQGKhwYCVNaAXd5kfajk2nONEnB+3lbqe66fzqOo1RGg5X/R1X2S7oBC2Gz0IQpJJnkXMwo578lAY6jwKTvBGezw9jfR1zCBSA55rmbDZYkMYz48zVxyQYVbqJ76TfCvgR3TQNUbYzJfdpDYjyVZU0/3kb+EdIb7uhxcD9BPH5jhMxtX7ClRV35ETPNiNQnoRCuvgdpeLhO6KMapo8zYfqGzraEjgKevRjGrG30ow1idYc2xw0TlbBovMS5DpuHF2bVmrAK2WA2vdkGkP5XLDVTusyG5SNVSXvjZ5J5fve9vaKosv6hnFShk4q72fxyZjFOYfwdQcka+pRII1cRcvPbp4vw3y1Y+5scJc4yBWsY2o46Wob4Y1j6YG9hdOL9hKt18kCx7wgG9Le5OsP9kFdboVVMggnqcNK12KOaoUDUfG/R7HedRGty9So\",\n  \"Expiration\" : \"2022-06-07T14:46:25Z\"\n}",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_accesskeyid": "ASIA2WLHRP7VJZ5KOPO2",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_code": "Success",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_expiration": "2022-06-07T14:46:25Z",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_lastupdated": "2022-06-07T08:40:08Z",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_secretaccesskey": "iX8D+JGlO0zWvSRTSoh88pQY4dhYcYWKePQWwET3",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_token": "IQoJb3JpZ2luX2VjENn//////////wEaCXVzLWVhc3QtMSJHMEUCIQDY2QHsT0hq5Ol9RnYhhR8UL/QI2MY4hPgE0HSChD5/uQIgGZFpHg2BNxSZYPYO6kfhxl9n7FqcjvJfFGN4+pf5MtEqsQQI0v//////////ARACGgw3MzUxOTM0MzIwNDIiDBBPI1atQfymGrxFiiqFBLar0HHjJIECTvFWFS2JFnPd/f776R9ooBWIVnBuZaXzWSh9/FKpI78cDy2L8nA6q0jtdTm+NpdkFKHUvgfwNoQlCmU530hWGkZMtoTIOy1BTvi0xs0e/LyACIPyWb56q/YjOKzRqWw+hxjcJ23Loiwd1buuKw3HHWYf33w++PMUaOJi7nmW3C7SNdXbaHColB2lB1RH2CkYI3yG7FBraA6VYenJHCga5oI216LvvBnUkoIGEkGYbWH/PYkBXBLFz/1SMC1f1MdFs6Qsq9ll/wfj9ByHDNX0BsoUY8gYI8DFnEWeHjZR/M+DHoxdk9XrRh5VH3ug5Ank3luGMFDACqc6XvXw/Et0K2KKeYasFrPSK1JOeW6Awa99fo6EtrFyIjVo3vciSNbXfZiwvs29KLl+mgDP1Ki4H/UYs90ogJMtCG/i/pjyD3xzqGWXY2VXc1nAmCdmSUVxRwN48ya+lpL3UtxKFekahTD6lBUNmsTxfHVLZIqH+Q3xfynYuX7TjrFcSwMbsCtfWUcfsaohz87ge0WnLHbYmjR+NVt4N2mLgTxc9CONS3pit+AS1nnzkZRmDvbMuLIhEx5B9pAFOPTXfXvtWCHSdjZUojRCp4hzwfKQGKhwYCVNaAXd5kfajk2nONEnB+3lbqe66fzqOo1RGg5X/R1X2S7oBC2Gz0IQpJJnkXMwo578lAY6jwKTvBGezw9jfR1zCBSA55rmbDZYkMYz48zVxyQYVbqJ76TfCvgR3TQNUbYzJfdpDYjyVZU0/3kb+EdIb7uhxcD9BPH5jhMxtX7ClRV35ETPNiNQnoRCuvgdpeLhO6KMapo8zYfqGzraEjgKevRjGrG30ow1idYc2xw0TlbBovMS5DpuHF2bVmrAK2WA2vdkGkP5XLDVTusyG5SNVSXvjZ5J5fve9vaKosv6hnFShk4q72fxyZjFOYfwdQcka+pRII1cRcvPbp4vw3y1Y+5scJc4yBWsY2o46Wob4Y1j6YG9hdOL9hKt18kCx7wgG9Le5OsP9kFdboVVMggnqcNK12KOaoUDUfG/R7HedRGty9So",
+            "ansible_ec2_identity_credentials_ec2_security_credentials_ec2_instance_type": "AWS-HMAC",
+            "ansible_ec2_instance_action": "none",
+            "ansible_ec2_instance_id": "i-05d3c2f715fccc145",
+            "ansible_ec2_instance_identity_document": "{\n  \"accountId\" : \"735193432042\",\n  \"architecture\" : \"x86_64\",\n  \"availabilityZone\" : \"us-east-1c\",\n  \"billingProducts\" : [ \"bp-6fa54006\" ],\n  \"devpayProductCodes\" : null,\n  \"marketplaceProductCodes\" : null,\n  \"imageId\" : \"ami-019599717e2dd5baa\",\n  \"instanceId\" : \"i-05d3c2f715fccc145\",\n  \"instanceType\" : \"m6i.large\",\n  \"kernelId\" : null,\n  \"pendingTime\" : \"2022-05-17T14:29:26Z\",\n  \"privateIp\" : \"10.17.65.244\",\n  \"ramdiskId\" : null,\n  \"region\" : \"us-east-1\",\n  \"version\" : \"2017-09-30\"\n}",
+            "ansible_ec2_instance_identity_document_accountid": "735193432042",
+            "ansible_ec2_instance_identity_document_architecture": "x86_64",
+            "ansible_ec2_instance_identity_document_availabilityzone": "us-east-1c",
+            "ansible_ec2_instance_identity_document_billingproducts": [
+                "bp-6fa54006"
+            ],
+            "ansible_ec2_instance_identity_document_devpayproductcodes": null,
+            "ansible_ec2_instance_identity_document_imageid": "ami-019599717e2dd5baa",
+            "ansible_ec2_instance_identity_document_instanceid": "i-05d3c2f715fccc145",
+            "ansible_ec2_instance_identity_document_instancetype": "m6i.large",
+            "ansible_ec2_instance_identity_document_kernelid": null,
+            "ansible_ec2_instance_identity_document_marketplaceproductcodes": null,
+            "ansible_ec2_instance_identity_document_pendingtime": "2022-05-17T14:29:26Z",
+            "ansible_ec2_instance_identity_document_privateip": "10.17.65.244",
+            "ansible_ec2_instance_identity_document_ramdiskid": null,
+            "ansible_ec2_instance_identity_document_region": "us-east-1",
+            "ansible_ec2_instance_identity_document_version": "2017-09-30",
+            "ansible_ec2_instance_identity_pkcs7": "MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAaCAJIAEggHqewog\nICJhY2NvdW50SWQiIDogIjczNTE5MzQzMjA0MiIsCiAgImFyY2hpdGVjdHVyZSIgOiAieDg2XzY0\nIiwKICAiYXZhaWxhYmlsaXR5Wm9uZSIgOiAidXMtZWFzdC0xYyIsCiAgImJpbGxpbmdQcm9kdWN0\ncyIgOiBbICJicC02ZmE1NDAwNiIgXSwKICAiZGV2cGF5UHJvZHVjdENvZGVzIiA6IG51bGwsCiAg\nIm1hcmtldHBsYWNlUHJvZHVjdENvZGVzIiA6IG51bGwsCiAgImltYWdlSWQiIDogImFtaS0wMTk1\nOTk3MTdlMmRkNWJhYSIsCiAgImluc3RhbmNlSWQiIDogImktMDVkM2MyZjcxNWZjY2MxNDUiLAog\nICJpbnN0YW5jZVR5cGUiIDogIm02aS5sYXJnZSIsCiAgImtlcm5lbElkIiA6IG51bGwsCiAgInBl\nbmRpbmdUaW1lIiA6ICIyMDIyLTA1LTE3VDE0OjI5OjI2WiIsCiAgInByaXZhdGVJcCIgOiAiMTAu\nMTcuNjUuMjQ0IiwKICAicmFtZGlza0lkIiA6IG51bGwsCiAgInJlZ2lvbiIgOiAidXMtZWFzdC0x\nIiwKICAidmVyc2lvbiIgOiAiMjAxNy0wOS0zMCIKfQAAAAAAADGCAUAwggE8AgEBMGkwXDELMAkG\nA1UEBhMCVVMxGTAXBgNVBAgTEFdhc2hpbmd0b24gU3RhdGUxEDAOBgNVBAcTB1NlYXR0bGUxIDAe\nBgNVBAoTF0FtYXpvbiBXZWIgU2VydmljZXMgTExDAgkAlrpI2eVeGmcwCQYFKw4DAhoFAKCBhDAY\nBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yMjA1MTcxNDI5MjdaMCMG\nCSqGSIb3DQEJBDEWBBSd9mpnT8yxQLzAXd57VLdRtYe24TAlBgkqhkiG9w0BCTQxGDAWMAkGBSsO\nAwIaBQChCQYHKoZIzjgEAzAJBgcqhkjOOAQDBC8wLQIUAqRED0JGgVBiQw3NruDL47hyelUCFQCc\nj5CgI/qvqpaI5dU8kAkWNM9mowAAAAAAAA==",
+            "ansible_ec2_instance_identity_rsa2048": "MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwGggCSABIIB\n6nsKICAiYWNjb3VudElkIiA6ICI3MzUxOTM0MzIwNDIiLAogICJhcmNoaXRlY3R1cmUiIDogIng4\nNl82NCIsCiAgImF2YWlsYWJpbGl0eVpvbmUiIDogInVzLWVhc3QtMWMiLAogICJiaWxsaW5nUHJv\nZHVjdHMiIDogWyAiYnAtNmZhNTQwMDYiIF0sCiAgImRldnBheVByb2R1Y3RDb2RlcyIgOiBudWxs\nLAogICJtYXJrZXRwbGFjZVByb2R1Y3RDb2RlcyIgOiBudWxsLAogICJpbWFnZUlkIiA6ICJhbWkt\nMDE5NTk5NzE3ZTJkZDViYWEiLAogICJpbnN0YW5jZUlkIiA6ICJpLTA1ZDNjMmY3MTVmY2NjMTQ1\nIiwKICAiaW5zdGFuY2VUeXBlIiA6ICJtNmkubGFyZ2UiLAogICJrZXJuZWxJZCIgOiBudWxsLAog\nICJwZW5kaW5nVGltZSIgOiAiMjAyMi0wNS0xN1QxNDoyOToyNloiLAogICJwcml2YXRlSXAiIDog\nIjEwLjE3LjY1LjI0NCIsCiAgInJhbWRpc2tJZCIgOiBudWxsLAogICJyZWdpb24iIDogInVzLWVh\nc3QtMSIsCiAgInZlcnNpb24iIDogIjIwMTctMDktMzAiCn0AAAAAAAAxggIvMIICKwIBATBpMFwx\nCzAJBgNVBAYTAlVTMRkwFwYDVQQIExBXYXNoaW5ndG9uIFN0YXRlMRAwDgYDVQQHEwdTZWF0dGxl\nMSAwHgYDVQQKExdBbWF6b24gV2ViIFNlcnZpY2VzIExMQwIJALFpzEAVWaQZMA0GCWCGSAFlAwQC\nAQUAoIGYMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIyMDUxNzE0\nMjkyN1owLQYJKoZIhvcNAQk0MSAwHjANBglghkgBZQMEAgEFAKENBgkqhkiG9w0BAQsFADAvBgkq\nhkiG9w0BCQQxIgQg04NstDe+ryQE6c2L8HHJvVZ6YoEKmHG8ts+KsML1k1EwDQYJKoZIhvcNAQEL\nBQAEggEAKXlJHC7kIAFT7tBLiKfTqt1KeTZBHqFKcXMSAWxBWCnQxYkS1JWNL/h0F0n7uxQPi3r6\nvRNARjHXQZS7ZI1+wxDSvmR05O/1AKfFCS5WaOSa05VtNisoD6DQ+Thw/mdIqaUgEqUejrv38r5U\nLmfQ/3v/SSycswcmUbQyJRxeFtiCBjhfWXxCxjWPafkJM+66oSVIFMhXsTlSVWGK7h2wlRT+FYn8\nm3GBJWrHmhrM0cHxU9fbRO5tPiP3cprF3LozWiOcd+42/EYnOUd1OB/Kq/nXuR5AOPClZZpN4cmh\neSYrL7RM8WqLoIujWGXfxpli8lehenyEnZwy4oLeRhEKFAAAAAAAAA==",
+            "ansible_ec2_instance_identity_signature": "eYimFkWvIUaJp6lhLlcc9nTcQRzXWU50i8yvyNTtxHrfNI+qmI2S7mjte+byAB47JxAnrPN6KFeD\nmKuaGjJcsjyKvcohXpZ1qxoZx/O9SmH4wvfEBaeOQrcKCwlG460PzdNq8iiWQkQTkPyxBfMebms1\noD2jyyepWQMbRdNkb64=",
+            "ansible_ec2_instance_life_cycle": "on-demand",
+            "ansible_ec2_instance_type": "m6i.large",
+            "ansible_ec2_local_hostname": "ip-10-17-65-244.ec2.internal",
+            "ansible_ec2_local_ipv4": "10.17.65.244",
+            "ansible_ec2_mac": "02:11:9e:fa:cb:d9",
+            "ansible_ec2_metrics_vhostmd": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_device_number": "0",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_interface_id": "eni-0f4d48334ee3c93ed",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_local_hostname": "ip-10-17-65-244.ec2.internal",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_local_ipv4s": "10.17.65.244",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_mac": "02:11:9e:fa:cb:d9",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_owner_id": "735193432042",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_security_group_ids": "sg-01b3ffe9096a4938b,sg-0f74b4a572605ec81",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_security_groups": "ansible-test-pr,infra-shared-services-app-linux",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_subnet_id": "subnet-06d98da3bcd120488",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_subnet_ipv4_cidr_block": "10.17.65.0/24",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_vpc_id": "vpc-0cdaa657714238d9e",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_vpc_ipv4_cidr_block": "10.17.64.0/22",
+            "ansible_ec2_network_interfaces_macs_02_11_9e_fa_cb_d9_vpc_ipv4_cidr_blocks": "10.17.64.0/22",
+            "ansible_ec2_placement_availability_zone": "us-east-1c",
+            "ansible_ec2_placement_availability_zone_id": "use1-az1",
+            "ansible_ec2_placement_region": "us-east-1",
+            "ansible_ec2_profile": "default-hvm",
+            "ansible_ec2_public_key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWojP11qfNMTEmIfKQamcb4kt9jECTISWbtr+0dmKygcmCgRCrl95+DFCe5ZonwzoxiwVQCyJJWOszT1Wzgrd2HphAEDJTDGH4zl+dvHJpkJEMN2yp9iv7QMjg1MzLzJ3XIXC6NJHPE24dC3KbBTGzlFl7hlJjH5gISK6R4bXxbAFQ9SHSnhvvqmS+PMw4JvBzIuIGnt9urEpejymQanToFpzGZ+sa4o1diNcg/JJA/QhV1MHqEFqtm6bsHU0o6MQ0KKUKZJrbfYSv1ao/HdyNibzm/otnjB/a2eY2RMHiWNf6WxNe0pQus3ZZNjvchrIMnOTgGEN8AOcPwTVxi/c/ ansible-key\n",
+            "ansible_ec2_reservation_id": "r-0edf4f04701ec6f3f",
+            "ansible_ec2_security_groups": "ansible-test-pr,infra-shared-services-app-linux",
+            "ansible_ec2_services_domain": "amazonaws.com",
+            "ansible_ec2_services_partition": "aws",
+            "ansible_ec2_user_data": "None"
+        },
+        "changed": false,
+        "failed": false
+    }
+}
+
+TASK [set_fact] ****************************************************************
+ok: [10.17.65.244]
+
+TASK [set_fact] ****************************************************************
+skipping: [10.17.65.244]
+
+TASK [copy CTEintallAnswer.conf using jinja] ***********************************
+ok: [10.17.65.244]
+
+TASK [Download CTE agent] ******************************************************
+ok: [10.17.65.244]
+
+TASK [Check vmsec available] ***************************************************
+ok: [10.17.65.244]
+
+TASK [Install CTE agent] *******************************************************
+fatal: [10.17.65.244]: FAILED! => {"changed": true, "cmd": ["/tmp/vee-fs-7.1.1-71-rh8-x86_64.bin", "-s", "/tmp/CTEinstallAnswer.conf", "-t", "/tmp"], "delta": "0:00:04.402774", "end": "2022-06-07 03:45:18.683518", "msg": "non-zero return code", "rc": 1, "start": "2022-06-07 03:45:14.280744", "stderr": "", "stderr_lines": [], "stdout": ".error: Failed dependencies:\n\tlsof is needed by vee-fs-7.1.1-71.x86_64\n\nInstallation failure.\nOutput from this session is located at /var/log/vormetric/install.fs.log.2022-06-07-03-45-18", "stdout_lines": [".error: Failed dependencies:", "\tlsof is needed by vee-fs-7.1.1-71.x86_64", "", "Installation failure.", "Output from this session is located at /var/log/vormetric/install.fs.log.2022-06-07-03-45-18"]}
+
+PLAY RECAP *********************************************************************
+10.17.65.244               : ok=10   changed=0    unreachable=0    failed=1    skipped=1    rescued=0    ignored=0 
