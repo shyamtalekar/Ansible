@@ -1,0 +1,60 @@
+---
+# tasks file for role-cte_agent
+
+- name: CTE Agent - Retrieve all information about the instance
+  amazon.aws.ec2_metadata_facts:
+  register: ec2_instance
+
+- name: CTE Agent - Retrieve all tags on an instance
+  amazon.aws.ec2_tag_info:
+    region: "{{ ec2_instance.ansible_facts.ansible_ec2_placement_region }}"
+    resource: "{{ ec2_instance.ansible_facts.ansible_ec2_instance_id }}"
+  register: ec2_tags
+
+- set_fact: 
+    ensure: 'present'
+  when: (ec2_tags.tags.CipherTrustManagement is defined) and ((ec2_tags.tags.CipherTrustManagement |lower)  == 'present')
+
+- set_fact: 
+    ensure: 'absent'
+  when: (ec2_tags.tags.CipherTrustManagement is not defined) or ((ec2_tags.tags.CipherTrustManagement is defined) and ((ec2_tags.tags.CipherTrustManagement|lower) != 'present'))
+
+- block: 
+  - block: 
+    - name: CTE Agent - copy CTEintallAnswer.conf using jinja
+      template: 
+        owner: root
+        group: root
+        mode: '0644'
+        src: "CTEinstallAnswer.conf.j2"
+        dest: "{{ answer_file }}"
+
+    - name: CTE Agent - Download CTE agent
+      get_url:
+        url: "{{ cte_source }}/vee-fs-7.1.1-71-rh8-x86_64.bin"
+        dest: /tmp/vee-fs-7.1.1-71-rh8-x86_64.bin
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: CTE Agent - Install dependency for vee-fs
+      yum: 
+        name: lsof
+        state: installed
+        update_cache: yes
+
+    - name: CTE Agent - Check vmsec available
+      stat: 
+        path: /bin/vmsec
+      register: vmsec_bin
+  
+    - name: CTE Agent - Install CTE agent
+      command: "/tmp/vee-fs-7.1.1-71-rh8-x86_64.bin -s {{ answer_file }} -t /tmp"
+      when: not vmsec_bin.stat.exists
+
+    when: ensure == 'present'
+  when: ansible_system == "Linux"
+
+- debug: 
+    msg: "CTE Agent is not yet supported on this platform on {{ inventory_hostname }}" 
+  when: ansible_system != "Linux" and ansible_system != "Windows"
