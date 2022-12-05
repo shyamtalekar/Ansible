@@ -1,0 +1,13 @@
+[defaults]
+roles_path = roles/
+inventory = inventory_master/commercial/hosts/aws/inventory
+#StrictHostKeyChecking = no
+private_key_file = /home/shyam/.ssh/id_rsa 
+ansible_python_interpreter = /usr/bin/python3.8
+
+[galaxy]
+server_list = published_repo
+
+[galaxy_server.published_repo]
+url=https://aap-hub-1.apissa.aws.alight.com/api/galaxy/content/published/
+token=38c63b181b4909f1a02e8342780f8f0817012e55
