@@ -1,0 +1,60 @@
+---
+#If AWSCLI is present then don't do these, use blocks
+
+- name: Get AWS CLI Installer from Artifactory
+  get_url: 
+    url: "{{ base_awscli_source }}"
+    dest: "/var/tmp/"
+    validate_certs: no
+
+- name: Get Version of AWS if Installed
+  command: "aws --version" 
+  register: aws_info
+  changed_when: false 
+  ignore_errors: true
+
+- name: Determine Version
+  set_fact: 
+    aws_version: "{{ aws_info.stdout | regex_search(regexp) }}"
+  vars: 
+    regexp: "aws-cli/[0-9.]+"
+  when: aws_info is defined
+
+- name: Install AWS CLI
+  block: 
+  - name: Install unzip package
+    yum: 
+      name: "unzip"
+      state: present
+
+  - name: Unarchive AWS CLI Installer from Artifactory 
+    unarchive: 
+      src: "{{ base_awscli_install_path }}/{{ base_awscli_package_name }}"
+      dest: "{{ base_awscli_install_path }}"
+      remote_src: yes
+
+  - name: Run AWS CLI Installer
+    command: "{{ base_awscli_install_path }}/aws/install --update"
+
+  - name: Create sym link and set permissions 
+    file: 
+      src: "/usr/local/bin/aws"
+      dest: "/usr/bin/aws"
+      state: link
+      mode: "0755"
+      force: "yes"
+
+  when: not aws_version is search(base_awscli_version)
+
+...
+
+
+
+
+
+variables:
+---
+# defaults file for role-awscli
+base_awscli_source: "https://artifactory.alight.com:443/artifactory/devops-generic-local/awscli/awscli-exe-linux-2.1.31.x86_64.zip"
+base_awscli_package_name: "awscli-exe-linux-2.1.31.x86_64.zip"
+base_awscli_install_path: "/var/tmp"

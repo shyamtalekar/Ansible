@@ -1,0 +1,61 @@
+---
+# tasks file for role-tenable
+
+- set_fact: 
+    tenable_service_ensure: "stopped"
+    tenable_service_enable: false
+  when: not base_ami_build or nessus_license_key == '' or nessus_license_key is not defined
+
+- set_fact: 
+    tenable_service_ensure: "started"
+    tenable_service_enable: true
+  when: base_ami_build or nessus_license_key != '' or nessus_license_key is defined
+
+#Install the Tenable Agent
+- name: Tenable - Install the Tenable dependency nessusagent from Artifactory
+  yum: 
+    name: "{{ nessus_source_url }}/NessusAgent-{{ nessus_agent_version }}-es{{ ansible_distribution_major_version  }}.x86_64.rpm"
+    state: "present"
+    disable_gpg_check: "yes" 
+
+# run the block when ami_build and nessus_license_key is defined
+- block: 
+  - name: Tenable - Check Nessus Agent
+    command: "{{ nessus_agent_path }} agent status"
+    become: yes
+    changed_when: false
+    ignore_errors: yes
+    register: nessus_agent_service_status
+
+  - name: Tenable - Link Nessus Agent to Nessus Manager
+    command: "{{ item }}"
+    become: yes
+    with_items:
+    - "{{ nessus_agent_path }} fix --set process_priority='low'"
+    - "{{ nessus_agent_path }} fix --set update_hostname='yes'"
+    - "{{ nessus_agent_path }} agent link --key={{ nessus_license_key }} --host={{ nessus_agent_host }} --port={{ nessus_agent_port }} --groups={{ nessus_agent_group }}"
+    when: nessus_agent_service_status.stdout is search('Not linked to')
+
+  when: not base_ami_build or nessus_license_key == '' or nessus_license_key is not defined
+
+- name: Tenable - start/stop the service
+  systemd:
+    state: "{{ tenable_service_ensure }}"
+    enabled: "{{ tenable_service_enable }}"
+    name: "{{ nessus_agent_service_name }}"
+
+
+
+Variables:
+
+---
+# defaults file for role-tenable
+
+nessus_source_url: "https://artifactory.alight.com:443/artifactory/security-generic-local/tenable"
+nessus_agent_version: "8.3.1"
+nessus_agent_path: "/opt/nessus_agent/sbin/nessuscli"
+nessus_license_key: "eeaa42d2e17376b8b4bfe8495c93c314497f112c515182f00ef42ab158b74b1a"
+nessus_agent_host: "cloud.tenable.com"
+nessus_agent_port: 443
+nessus_agent_group: "Alight_AWS_Servers_Group1"
+nessus_agent_service_name: "nessusagent"

@@ -1,0 +1,33 @@
+---
+#task file for installing jq helper query
+
+- name: Installs the jq helper utility
+  get_url: 
+    url: "{{ base_jq_source }}"
+    dest: "{{ base_jq_install_path }}"
+    validate_certs: no
+
+- name: Set permissions
+  file: 
+    mode: "0755"
+    state: file
+    path: "{{ base_jq_install_path }}"
+
+- name: Set symlinks
+  file: 
+    src: "{{ base_jq_install_path }}"
+    dest: "/usr/bin/jq"
+    mode: "0755"
+    state: link
+
+...
+
+
+
+Variable:
+
+---
+# defaults file for role-jq
+base_jq_source: "https://artifactory.alight.com:443/artifactory/devops-generic-local/jq/jq-1.6"
+base_jq_version: "1.6"
+base_jq_install_path: "/usr/local/bin/jq-{{ base_jq_version }}"

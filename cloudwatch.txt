@@ -1,0 +1,28 @@
+---
+# tasks file for role-cloudwatch
+#Install the Cloudwatch Agent
+- name: Install AWS CloudWatch Agent RPM via dnf
+  yum:
+    disable_gpg_check: "yes"
+    name:
+     - "{{ cwa_package_url }}"
+
+# Copy log ratation configuration from sample file.
+- name: cw_logrotate configuration
+  ansible.builtin.copy:
+    dest: "/etc/logrotate.d/amazon-cloudwatch-agent"
+    mode: "0600"
+    src: "linux_amazon-cloudwatch-agent.logrotate"
+
+#Copy agent configuation from sample file.
+- name: Copy over CloudWatch Agent configuration
+  ansible.builtin.copy:
+    dest: "/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
+    mode: "0600"
+    src: "linux_amazon-cloudwatch-agent.json"
+
+#Enable cloudwatch agent.
+- name: Enable AWS CloudWatch Agent
+  ansible.builtin.service:
+    enabled: "yes"
+    name: "amazon-cloudwatch-agent"

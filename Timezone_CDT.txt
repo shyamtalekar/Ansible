@@ -1,0 +1,14 @@
+---
+#Sets timezone to CDT
+
+- name: Set link for localtime to CST6CDT
+  file: 
+    src: "/usr/share/zoneinfo/CST6CDT"
+    dest: "/etc/localtime"
+    state: link
+    force: yes
+  notify: 
+    - Restart systemd timedated service
+    
+
+

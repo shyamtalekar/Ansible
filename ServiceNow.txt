@@ -1,0 +1,29 @@
+---
+# tasks file for role-servicenow
+
+- name: servicenow - Ensure group "{{ sn_group }}" exists with correct gid
+  group:
+    name: "{{ sn_group }}"
+    state: present
+    gid: "{{ sn_group_id }}"
+
+- name: servicenow - Install the Service now "{{ sn_username }}" functional id.
+  user:
+    name: "{{ sn_username }}"
+    comment: ServiceNow Discovery Functional Id
+    uid: "{{ sn_username_id }}"
+    group: "{{ sn_group }}"
+    shell: /bin/bash
+
+- name: servicenow - Set authorized key 
+  ansible.posix.authorized_key:
+    user: "{{ sn_username }}"
+    state: present
+    key: "{{ lookup('file', 'authorized_keys') }}"
+
+- name: servicenow - Add "{{ sn_username }}" user to the sudoers
+  community.general.sudoers:
+    name: 10-sadiscoverycomlinux # This name just overwrite puppet file creation
+    state: present
+    user: "{{ sn_username }}"
+    commands: "{{ sn_sudo_content }}"

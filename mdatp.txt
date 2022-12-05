@@ -1,0 +1,157 @@
+---
+#Install and configure the MS_Defender
+
+- name: Setup yum repo
+  yum_repository: 
+    name: "{{ base_mdatp_yum_repo }}"
+    description: "Alight Artifactory Microsoft RPM Packages"
+    baseurl: "{{ base_mdatp_repo_source }}"
+    enabled: "yes"
+    sslverify: "no"
+
+
+- name: Create microsoft directory
+  file: 
+    path: "/opt/microsoft"
+    state: "directory"
+    mode: "755"
+
+
+- name: Create mdatp directory
+  file: 
+    path: "/opt/microsoft/mdatp/"
+    state: "directory"
+    mode: "775"
+
+
+- name: Create managed folder in /etc/
+  file:
+    path: "/etc/opt/microsoft/mdatp/managed"
+    state: directory
+    mode: "755"
+
+
+- name: Get MS Defender script from artifactory
+  get_url:
+    url: "{{ ms_defender_script }}"
+    dest: "/opt/microsoft/mdatp/"
+    validate_certs: "no"
+    mode: "0755"
+
+
+- name: Setting Variables for MS_Defender Installation in Linux 
+  set_fact: 
+    defender_service: "mdatp"
+    defender_script: "/opt/microsoft/mdatp/MicrosoftDefenderATPOnboardingLinuxServer.py"
+
+    
+- name: Install Defender Service 
+  yum: 
+    name: "{{ defender_service }}"
+    state: "latest"
+    disable_gpg_check: "yes"
+
+
+- name: Template managed mdatp json file
+  template: 
+    src: "mdatp_managed.json.j2"
+    dest: "/etc/opt/microsoft/mdatp/managed/managed_mdatp.json"
+    owner: "root"
+    group: "root"
+    mode: "0600"
+
+
+- name: Check health status of MS Defender
+  command: 
+    cmd: "mdatp health --field licensed"
+  register: mdatp_health
+
+
+- name: Register MS Defender
+  command: 
+    cmd: "python3 {{ defender_script }}"
+    chdir: "/usr/bin"
+  when: mdatp_health.stdout != "true"
+  
+
+- name: MS Defender Update
+  cron: 
+    name: "Updates MS Defender package (weekly)"
+    minute: "*"
+    hour: "6"
+    weekday: "3"
+    user: "root"
+    job: "yum update mdatp > /dev/null 2>&1"
+    cron_file: "ms_defender_update"
+
+
+- name: Ensure MS Defender is always running 
+  service: 
+    name: "{{ defender_service }}"
+    state: "started"
+    enabled: yes
+
+
+
+Variables:
+
+---
+# defaults file for role-mdatp
+base_mdatp_yum_repo: "ms-rhel8-yum-repo"
+base_mdatp_repo_source: "https://artifactory.alight.com:443/artifactory/MS-RHEL8-rpm-remote"
+ms_defender_script: "https://artifactory.alight.com:443/artifactory/ags-generic-local/msdefender/MicrosoftDefenderATPOnboardingLinuxServer.py"
+
+
+
+Templates:mdatp_managed.json.j2
+
+{
+	"antivirusEngine": {
+		"behaviorMonitoring": "disabled",
+		"enableRealTimeProtection": true,
+		"scanAfterDefinitionUpdate": false,
+		"scanArchives": false,
+		"maximumOnDemandScanThreads": 1,
+		"passiveMode": false,
+		"threatTypeSettingsMergePolicy": "merge",
+		"threatTypeSettings": [
+			{
+				"key": "potentially_unwanted_application",
+				"value": "block"
+			},
+			{
+				"key": "archive_bomb",
+				"value": "audit"
+			}
+		],		
+		"exclusionsMergePolicy": "merge",
+		"exclusions": [
+		 {% for path in excluded_paths %}
+            {
+                "$type":"excludedPath",
+                "isDirectory":true,
+                "path": "{{ path }}" 
+            } {% if not loop.last or excluded_filenames|length > 0%} , {% endif %}
+          {% endfor %}
+
+          {% for filename in excluded_filenames %}
+            {
+                "$type":"excludedFileName",
+                "name": "{{ filename }}"
+            }{% if not loop.last %} , {% endif %}
+          {% endfor %}
+           
+		]
+	},
+	"cloudService": {
+		"enabled": true,
+		"diagnosticLevel": "required",
+		"automaticSampleSubmissionConsent": "safe",
+		"automaticDefinitionUpdateEnabled": true
+	}
+}
+
+
+
+ 
+  

@@ -1,0 +1,32 @@
+---
+# tasks file for role-sysstat
+- name: sysstat - Install package from yum
+  yum:
+    name: "sysstat"
+    state: present
+
+- name: sysstat - Ensure service is always running
+  service:
+    name: "sysstat"
+    state: "started"
+    enabled: yes
+
+- name: sysstat - Weekly sa2 Cron
+  cron:
+    name: "sa2 (weekly)"
+    minute: "53"
+    hour: "23"
+    weekday: "*"
+    user: "root"
+    job: "/usr/lib64/sa/sa2 -A"
+    cron_file: "sa2"
+
+- name: sysstat - Weekly sa1 Cron
+  cron:
+    name: "sa1 (weekly)"
+    minute: "*/10"
+    hour: "*"
+    weekday: "*"
+    user: "root"
+    job: "/usr/lib64/sa/sa1 1 1"
+    cron_file: "sa1"

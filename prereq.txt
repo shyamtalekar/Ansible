@@ -1,0 +1,151 @@
+---
+# Base prereq class should apply to all nodes
+
+- name: Update Root Password 
+  user: 
+    name: "root"
+    password: "{{ base_root_passwd }}"
+
+- name: Ensure GPG Keys Exist
+  copy: 
+    content: "{{ item.value.content }}"
+    dest: "{{ item.value.path }}"
+  loop: "{{ base_gpg_keys | dict2items }}"
+
+
+- name: Ensure Artifactory Yum Repositories Exist
+  yum_repository:
+    name: "{{ item.value.name }}"
+    description: "{{ item.value.descr }}"
+    baseurl: "{{ item.value.baseurl }}"
+    enabled: "{{ item.value.enabled }}"
+    gpgcheck: "{{ item.value.gpgcheck }}"
+    gpgkey: "{{ item.value.gpgkey }}"
+    sslverify: "{{ item.value.sslverify }}"
+    reposdir: "{{ item.value.target }}"
+  loop: "{{ base_yum_repos | dict2items }}" 
+
+
+- name: Ensure Required Packages Exist
+  yum: 
+    name: "{{ base_prereq_packages }}"
+    state: "present"
+
+
+- name: Create temp script execution directory
+  file: 
+    path: "{{ base_linux_temp_dir }}"
+    state: "directory"
+    owner: "root"
+    group: "root" 
+    mode: "0755"
+
+...
+
+Variables:
+
+---
+
+base_prereq_packages:
+  # Needed for AWS Managed AD
+  - 'sssd'
+  - 'realmd'
+  - 'adcli'
+  - 'oddjob-mkhomedir'
+  - 'oddjob'
+  - 'samba-winbind-clients'
+  - 'samba-winbind'
+  - 'samba-common-tools'
+  - 'samba-winbind-krb5-locator'
+  - 'krb5-workstation'
+  - 'python3'
+  - 'vim'
+  - 'unzip'
+  # Needed for ebs volume mounting
+  - 'lvm2'
+  # Operations enablement
+  - 'tree'
+  # SNOW
+  - 'lsof'
+  #NBU
+  - 'libnsl'
+
+base_yum_repos:
+  devops-yum-repo:
+    name: "devops-yum-repo"
+    descr: "Alight Artifactory DevOps RPM Packages"
+    baseurl: "https://artifactory.alight.com:443/artifactory/devops-yum-local/"
+    enabled: "1"
+    gpgcheck: "1"
+    gpgkey: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-artifactory'
+    sslverify: "1"
+    target: "/etc/yum.repos.d/" #changed target parameter
+  microsoft-yum-repo:
+    name: "ms-rhel8-yum-repo"
+    descr: "Alight Artifactory Microsoft RPM Packages"
+    baseurl: "https://artifactory.alight.com:443/artifactory/MS-RHEL8-rpm-remote/"
+    enabled: "1"
+    gpgcheck: "1"
+    gpgkey: 'file:///etc/pki/rpm-gpg/RPM-GPG-KEY-microsoft'
+    sslverify: "1"
+    target: "/etc/yum.repos.d/" #changed target paraemeter 
+
+base_gpg_keys: 
+  # NOTE: Artifactory gpg key is same within clz/flz.
+  artifactory:
+    path: '/etc/pki/rpm-gpg/RPM-GPG-KEY-artifactory'
+    content: |
+      -----BEGIN PGP PUBLIC KEY BLOCK-----
+
+      mQENBGFfYv0BCACtDX2vyVYYexC2SqBoBW3RRM3xIXuf9pebP2Gs5aOCBuPZoxE8
+      eUivVXe424zwolxfXgsKJ/NQ+YZlmicuXUby+ZFb5BospbFyuSwIqVGT1iS8MWJB
+      3Z86UkNKliGcW7/oj2x7uZXVlkas8XBmmahVXjpiuiWEx5q3wAVk4AxixZec7QBW
+      mGzpAPFJWWS4TM6Im42I3bvN3iXWDaVBxLcLoIMikCBlDqyLMCSSCwv63M4FKrOb
+      0rGHXPmCYGyz2bdpT18kMZ7slJs0SbWzd6ucR21njPcEvf3vXoyGE/3ruLTihFMR
+      t77FKoPqUy+DfZU4RNIOEGrRaBcc8Ai7WPZbABEBAAG0RGFydGlmYWN0b3J5LmFz
+      c3cuYWxpZ2h0LWZlZC5jb20gKGdwZyBrZXkpIDxkZW5uaXMuaGFyZGVyQGFsaWdo
+      dC5jb20+iQFOBBMBCAA4FiEEeIz4yyVGynxWyq809ZsUx4GJS80FAmFfYv0CGwMF
+      CwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQ9ZsUx4GJS81OvQf/SYtJAnsj7bSg
+      kz2ZkC6h7Ol5+ighs6quuGp9/BXkNDWo8DcRRhXEnIPLARi5UgXfN27jHMJLTYA1
+      0MdAf7oWizYje4205+LFVaxeayzjSMLkkX4GHmL+0nEdp/RLhVBFLJvXeS9MsEm9
+      etMIFhe4JhS+nsVOQApbZjAtCGlFrVYbHDay+jr0YOwXONBlQGEsIWhn4XeAvXXb
+      L7gHdCmdXqTobIbxptv36xXJRGmldzB6ugqyBwpypHFxPMT74qCESK9H/7QYLMCG
+      xzDXKNJe2Tbd9uAXmnSVv/rVLAF0B5HuHbj0v34AR6PEVA8cGigutgWusaU1nH92
+      Bpzlkt6sLbkBDQRhX2L9AQgA1IAloq8Ly1r7OQYd7hmD6JhtcsGv3N1K88DNuZI/
+      L7VPEiy5C9KL38ra1PN8mFhQpq+g4wv8Z+Onv5j/m4cqRcbD4NV8TaFI2V+Z9SZ2
+      n2YOI26rBT1CNTBitk1gWUe8ASrIRsDCRtkrjw+CAO8UTVpbXUh+Eie89+ZJZs/Y
+      0zu0n5OqHEM+TxA93ChLRzG7wiaW72eXdGpMIF7XlfvSA1fUivCWf6gJ3co1B7J3
+      l7IIx7OISxQBbJOMNMK+amlJj7kxBh5H9YKOWOFSU5wmO/JZiAmz2i221ilz73hw
+      vovWtw7ecyvx3LDEupUAxK+MM55w9FpT+Mmriwxm6939iQARAQABiQE2BBgBCAAg
+      FiEEeIz4yyVGynxWyq809ZsUx4GJS80FAmFfYv0CGwwACgkQ9ZsUx4GJS80IlAf/
+      QYtNXLK5defINtI2+3LvbK2AWUych97/dCPae7erlmS8zlM0kStblGt6RNfOOpSm
+      HTDiqQ+7ywUcHOGr+76qXxcKTarDIJPt15P0/EVI8hWnz+gnzQQJdvq7/b//wHR7
+      9MGYJruEMCgvSJWg8MgexsaUm8BAnFqN4HzYPrvPYkUxABScfe7t4J+I8lbiAxFI
+      80br94AiXi7J6+CXKO1h+yQOFu1Fvxv2M8sNdopdzkPmZTxTxdzEn4uEt6JtOtAL
+      WVrt9qFONlNh5yim4O0JQ+ptOCEEiR0gLbROzEUsmieBwO4qqHpoZ2YxycF6glD0
+      +J2Y7orEQeUqYnjIcnCCAA==
+      =DwF0
+      -----END PGP PUBLIC KEY BLOCK-----
+      
+  microsoft:
+    path: '/etc/pki/rpm-gpg/RPM-GPG-KEY-microsoft'
+    content: |
+      -----BEGIN PGP PUBLIC KEY BLOCK-----
+      Version: GnuPG v1.4.7 (GNU/Linux)
+
+      mQENBFYxWIwBCADAKoZhZlJxGNGWzqV+1OG1xiQeoowKhssGAKvd+buXCGISZJwT
+      LXZqIcIiLP7pqdcZWtE9bSc7yBY2MalDp9Liu0KekywQ6VVX1T72NPf5Ev6x6DLV
+      7aVWsCzUAF+eb7DC9fPuFLEdxmOEYoPjzrQ7cCnSV4JQxAqhU4T6OjbvRazGl3ag
+      OeizPXmRljMtUUttHQZnRhtlzkmwIrUivbfFPD+fEoHJ1+uIdfOzZX8/oKHKLe2j
+      H632kvsNzJFlROVvGLYAk2WRcLu+RjjggixhwiB+Mu/A8Tf4V6b+YppS44q8EvVr
+      M+QvY7LNSOffSO6Slsy9oisGTdfE39nC7pVRABEBAAG0N01pY3Jvc29mdCAoUmVs
+      ZWFzZSBzaWduaW5nKSA8Z3Bnc2VjdXJpdHlAbWljcm9zb2Z0LmNvbT6JATUEEwEC
+      AB8FAlYxWIwCGwMGCwkIBwMCBBUCCAMDFgIBAh4BAheAAAoJEOs+lK2+EinPGpsH
+      /32vKy29Hg51H9dfFJMx0/a/F+5vKeCeVqimvyTM04C+XENNuSbYZ3eRPHGHFLqe
+      MNGxsfb7C7ZxEeW7J/vSzRgHxm7ZvESisUYRFq2sgkJ+HFERNrqfci45bdhmrUsy
+      7SWw9ybxdFOkuQoyKD3tBmiGfONQMlBaOMWdAsic965rvJsd5zYaZZFI1UwTkFXV
+      KJt3bp3Ngn1vEYXwijGTa+FXz6GLHueJwF0I7ug34DgUkAFvAs8Hacr2DRYxL5RJ
+      XdNgj4Jd2/g6T9InmWT0hASljur+dJnzNiNCkbn9KbX7J/qK1IbR8y560yRmFsU+
+      NdCFTW7wY0Fb1fWJ+/KTsC4=
+      =J6gs
+      -----END PGP PUBLIC KEY BLOCK-----
