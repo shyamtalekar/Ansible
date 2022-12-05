@@ -1,0 +1,266 @@
+#!/bin/bash
+
+##################################################################################
+#  Script: ansible-playbook.sh
+#  Purpose: Script to execute api call against the aap-controller.
+#  Description: Used during ami builds to register the temporary ec2 instance
+#               with aap-controller, execute ansible base module run against
+#               the specified role, and clean the ami before ami creation.
+#
+#  CHANGE LOG - (add new entries to the top)
+#  Date       Coder        Description
+#  ------------------------------------------------------------------------------
+#  06/13/2022 ah0118003     Initial coding.
+###################################################################################
+
+TOKEN=$(curl -s -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" -X PUT "http://169.254.169.254/latest/api/token")
+INSTANCE_ID="$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id)"
+HOSTNAME=$(hostname -f)
+ANSIBLE_INVENTORIES_API="/api/v2/inventories"
+ANSIBLE_GROUPS_API="/api/v2/groups"
+ANSIBLE_JOB_TEMPLATES_API="/api/v2/job_templates"
+ANSIBLE_JOBS_API="/api/v2/jobs"
+REGION=us-east-1
+SECRET_ARN="arn:aws:secretsmanager:us-east-1:735193432042:secret:ansible/pr/api-token-jjxqiR"
+
+
+# -----------------------------------------------------------------------------
+# Details script usage
+# -----------------------------------------------------------------------------
+function USAGE_FN() {
+  cat <<__EndOfUsage__
+
+  Usage:
+
+  $SCRIPT_NAME  [options]
+                -?                           # this help doc
+                -r --role                    # the ansible role (e.g., base)                          
+                -t --token                   # the ansible API token  
+                -c --controller  <optional>  # the ansible controller (i.e., ansible.apissw.aws.alight.com)
+                -i --inventory   <optional>  # the ansible ec2 inventory (i.e., AWS E2 Inventory - Static)                
+                -p --platform    <optional>  # the ansible ec2 platform (i.e., linux/windows)
+
+  Purpose:
+
+  Script to execute one-time ansible playbook run against a targeted ec2 instance.
+
+  Example:
+
+  Executes an ansible playbook against the specified role within ansible production environment.
+
+  ./$SCRIPT_NAME --role base --token 234SDFWERasdf@34SDFSDF
+
+__EndOfUsage__
+  exit -1
+}
+
+# -----------------------------------------------------------------------------
+# Review script inputs
+# -----------------------------------------------------------------------------
+DOOPTIONANALYSIS() {
+
+  # Default optional parameters.
+  v_controller="ansible.apissw.aws.alight.com"
+  v_inventory="AWS E2 Inventory - Static"
+  v_platform="linux"
+  v_token=$(aws secretsmanager get-secret-value --region="$REGION" --output=text --query SecretString --secret-id "$SECRET_ARN")
+
+  if [ ! -z "$*" ]; then
+    ### Option processing
+    while [ $# -gt 0 ]; do
+    case "$1" in
+      -t) ;& --token)
+        shift
+		    if [[ "$1" != \-* && $# -gt 0 ]]; then
+		      v_token=$1
+		      shift;
+		    fi
+        ;;    
+      -r) ;& --role)
+        shift
+		    if [[ "$1" != \-* && $# -gt 0 ]]; then
+		      v_role=$1
+		      shift;
+		    fi
+        ;;
+      -i) ;& --inventory)
+        shift
+		    if [[ "$1" != \-* && $# -gt 0 ]]; then
+		      v_inventory=$1
+		      shift;
+		    fi
+        ;;
+      -p) ;& --platform)
+        shift
+		    if [[ "$1" != \-* && $# -gt 0 ]]; then
+		      v_platform=$1
+		      shift;
+		    fi
+        ;;        
+      -c) ;& --controller)
+        shift
+		    if [[ "$1" != \-* && $# -gt 0 ]]; then
+		      v_controller=$1
+		      shift;
+		    fi
+        ;;
+      *)
+        echo "Unknown option: $1"
+        USAGE_FN
+        ;;
+      esac
+    done
+  fi
+
+  # Verify required parameters.
+  if [[ -z "$v_role" ]]; then
+    USAGE_FN
+  fi
+}
+
+# -----------------------------------------------------------------------------
+# Print out header output.
+# -----------------------------------------------------------------------------
+function OUTPUT() {
+  local line="$*"
+  echo
+  echo $line
+  echo ${line//?/-}
+}
+
+# -----------------------------------------------------------------------------
+# Adding ec2 to inventory.
+# -----------------------------------------------------------------------------
+function add_ec2_to_inventory() {
+  OUTPUT "Adding ${HOSTNAME} to '${v_inventory}'..."
+
+  # Retrieve associated inventory api path.
+  inventory_api="https://${v_controller}${ANSIBLE_INVENTORIES_API}?name=${v_inventory}"
+  inventory_hosts_api=$(curl -s -k -L "${v_headers[@]}" -X GET "${inventory_api}" | jq -r ".results[] | select(.name == \"${v_inventory}\") | .related.hosts")
+  echo "Inventory Hosts API: ${inventory_hosts_api}"
+
+  # Add ec2 to inventory.
+  payload="{ 
+    \"name\": \"${HOSTNAME}\", 
+    \"description\": \"Temporary ec2 used during ami build.\", 
+    \"enabled\": true, 
+    \"instance_id\": \"${INSTANCE_ID}\",
+    \"inventory\": \"${v_inventory}\",
+    \"variables\": \"\" 
+  }"
+
+  curl -s -k -L "${v_headers[@]}" -X POST "https://${v_controller}${inventory_hosts_api}" -d "${payload}" | jq .
+}
+
+# -----------------------------------------------------------------------------
+# Removing ec2 from inventory.
+# -----------------------------------------------------------------------------
+function remove_ec2_from_inventory() {
+  OUTPUT "Removing ${HOSTNAME} from '${v_inventory}'..."
+
+  # Retrieve associated inventory api path.
+  inventory_api="https://${v_controller}${ANSIBLE_INVENTORIES_API}?name=${v_inventory}"
+  inventory_hosts_api=$(curl -s -k -L "${v_headers[@]}" -X GET "${inventory_api}" | jq -r ".results[] | select(.name == \"${v_inventory}\") | .related.hosts")
+  echo "Inventory Hosts API: ${inventory_hosts_api}"
+
+  # Retrieve inventory id.
+  inventory_id=$(curl -s -k -L "${v_headers[@]}" -X GET "https://${v_controller}${inventory_hosts_api}" | jq -c ".results[] | select(.name==\"$HOSTNAME\") | .id")
+  echo "Inventory id: ${inventory_id}"
+
+  # Remove ec2 from inventory.
+  payload="{ 
+    \"id\": ${inventory_id}, 
+    \"disassociate\": true
+  }"
+  
+  curl -s -k -L "${v_headers[@]}" -X POST "https://${v_controller}${inventory_hosts_api}" -d "${payload}" | jq .
+}
+
+# -----------------------------------------------------------------------------
+# Adding ec2 to inventory group.
+# -----------------------------------------------------------------------------
+function add_ec2_to_inventory_group() {
+  OUTPUT "Adding ${HOSTNAME} to '${v_inventory}' group..."
+
+  # Retrieve associated groups api path.
+  groups_api="https://${v_controller}${ANSIBLE_GROUPS_API}?name=platform_${v_platform}"
+  groups_hosts_api=$(curl -s -k -L "${v_headers[@]}" -X GET "${groups_api}" | jq -r ".results[] | select(.summary_fields.inventory.name == \"${v_inventory}\") | .related.hosts")
+  echo "Groups Hosts API: ${groups_hosts_api}"
+
+  # Add ec2 to group.
+  payload="{ 
+    \"name\": \"$HOSTNAME\" 
+  }"
+
+  curl -s -k -L "${v_headers[@]}" -X POST "https://${v_controller}${groups_hosts_api}" -d "${payload}" | jq .
+}
+
+
+# -----------------------------------------------------------------------------
+# Execute ansible playbook against ec2.
+# -----------------------------------------------------------------------------
+function execute_ansible_playbook() {
+  template="${v_role}-${v_platform}-template"
+  OUTPUT "Executing ${template} against ${HOSTNAME}..."
+
+  ################################################
+  ## TEMPORARY... until we rename template/workflow
+  ################################################
+  template="AMI-Linux-Base"
+
+  # Retrieve associated templates api path.
+  templates_api="https://${v_controller}${ANSIBLE_JOB_TEMPLATES_API}?name=${template}"
+  templates_launch_api=$(curl -s -k -L "${v_headers[@]}" -X GET "${templates_api}" | jq -r .results[0].related.launch)
+  echo "Template Launch API: ${templates_launch_api}"
+
+  # Execute job (retry three times).
+  attempt=1
+  while : ; do  
+    job_id=$(curl -s -k -L "${v_headers[@]}" -X POST "https://${v_controller}${templates_launch_api}" -d "{ \"limit\": \"${HOSTNAME}\", \"extra_vars\": { \"base_ami_build\": true } }" | jq -r .job)
+    echo -e "Launching Job: https://${v_controller}/#/jobs/playbook/${job_id}/output\n"
+
+    # Query job status.
+    status='undefined'
+    while : ; do
+      status=$(curl -s -k -L "${v_headers[@]}" -X GET "${templates_api}" | jq -r ".results[0].summary_fields.recent_jobs[] | select(.id == ${job_id}) | .status")
+      if [ ${status} = 'pending' ] || [ ${status} = 'running' ]; then
+        echo "Ansible playbook execution ${status}..."
+        sleep 10s
+      else
+        break
+      fi
+    done
+
+    # Retrieve job output.
+    curl -s -k -L "${v_headers[@]}" -X GET "https://${v_controller}${ANSIBLE_JOBS_API}/${job_id}/stdout/?format=txt"
+
+    # Retry job if failure.
+    if [ ${status} = 'failed' ]; then
+      echo "Ansible playbook execution failed!."
+      attempt=$((attempt+1))
+      if [ ${attempt} -gt 3 ]; then
+        v_exitcode=1
+        break
+      fi
+      echo "Retrying ansible playbook execution (attempt ${attempt})..."
+    else
+      break
+    fi
+  done    
+}
+
+
+# -----------------------------------------------------------------------------
+# Main  Script Execution Begins Here
+# -----------------------------------------------------------------------------
+DOOPTIONANALYSIS $*
+v_headers=(-H "Content-Type: application/json" -H "Authorization: Bearer ${v_token}") 
+v_exitcode=0
+
+add_ec2_to_inventory
+add_ec2_to_inventory_group
+execute_ansible_playbook
+remove_ec2_from_inventory
+
+echo "Done"
+exit ${v_exitcode}
