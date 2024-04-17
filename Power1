@@ -1,0 +1,42 @@
+try {
+    # Define the URL of the main page
+    $url = "https://build.csnzoo.com/"
+
+    # Make the web request
+    $response = Invoke-WebRequest -Uri $url -ErrorAction Stop
+
+    # Extract job names
+    $jobLinks = $response.ParsedHtml.querySelectorAll('.model-link.inside')
+
+    # Extract job names from links
+    $jobs = @()
+    foreach ($link in $jobLinks) {
+        $jobName = ($link.href -split '/')[4]  # Extract job name from URL
+        $jobs += $jobName
+    }
+
+    # Iterate through each job
+    foreach ($jobName in $jobs) {
+        # Construct the job URL
+        $jobUrl = $baseUrl + $jobName
+
+        # Make the web request
+        $jobResponse = Invoke-WebRequest -Uri $jobUrl -ErrorAction SilentlyContinue
+
+        # Check if the job page exists
+        if ($jobResponse.StatusCode -eq 200) {
+            # Extract the latest build status
+            $latestBuild = $jobResponse.ParsedHtml.querySelector('.build-row')
+            if ($latestBuild) {
+                $buildStatus = $latestBuild.querySelector('.build-status').innerText
+                
+                # Check if the latest build is successful
+                if ($buildStatus -eq "SUCCESS") {
+                    Write-Host "Job $jobName: Successful build"
+                }
+            }
+        }
+    }
+} catch {
+    Write-Host "Error occurred while retrieving job information: $_"
+}
